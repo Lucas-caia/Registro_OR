@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Página Principal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Registros</h1>
+</header>
+
+<main id="registros-container">
+</main>
+
+<button id="add-button">+</button>
+
+<script>
+  let registros = JSON.parse(localStorage.getItem("registros")) || [];
+
+  function salvarRegistrosNoLocalStorage() {
+    localStorage.setItem("registros", JSON.stringify(registros));
+  }
+
+  function carregarRegistros() {
+    const container = document.getElementById("registros-container");
+    container.innerHTML = "";
+
+    registros.forEach((registro, index) => {
+      const div = document.createElement("div");
+      div.classList.add("registro");
+      div.innerHTML = `
+  <div class="registro-header">
+    <!-- Ícones (exemplo usando entidades HTML) -->
+    <span class="registro-star">&#9733;</span>
+    <span class="registro-gear">&#9881;</span>
+  </div>
+  <div class="registro-body">
+    <!-- Cada informação em um “chip” -->
+    <div class="registro-chip">Nome: ${registro.nome}</div>
+    <div class="registro-chip">Vida: ${registro.vida}</div>
+    <div class="registro-chip">Sanidade: ${registro.sanidade}</div>
+    <div class="registro-chip">Esforço: ${registro.esforco}</div>
+    <div class="registro-chip">Dinheiro: ${registro.dinheiro || '---'}</div>
+    <div class="registro-chip">Pontos de missão: ${registro.pm}</div>
+    <div class="registro-chip">Data: ${registro.data}</div>
+  </div>
+`;
+      div.addEventListener("click", () => {
+        window.location.href = `DetailPage.html?id=${index}`;
+      });
+
+      container.appendChild(div);
+    });
+  }
+
+  function addRegistro(novoRegistro) {
+    registros.push(novoRegistro);
+    salvarRegistrosNoLocalStorage();
+    carregarRegistros();
+  }
+
+  window.addRegistro = addRegistro;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const addButton = document.getElementById("add-button");
+
+    addButton.addEventListener("click", () => {
+      window.open("RegisterPage.html", "Cadastro", "width=600,height=600");
+    });
+
+    carregarRegistros();
+  });
+</script>
+</body>
+</html>
