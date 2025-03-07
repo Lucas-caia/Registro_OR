@@ -1,62 +1,99 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
-  <title>Page Not Found</title>
+  <title>Perdido no Outro Lado</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap');
+
     * {
-      line-height: 1.2;
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      line-height: 1.5;
     }
 
-    html {
-      color: #888;
-      display: table;
-      font-family: sans-serif;
+    html, body {
       height: 100%;
-      text-align: center;
       width: 100%;
+      font-family: 'IM Fell English', serif;
+      text-align: center;
+      background-color: #0a0a0a;
+      background-image: url('path_to_texture.jpg'); /* Ajuste a textura */
+      background-size: cover;
+      color: #c9b37e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: voidFade 6s infinite;
     }
 
-    body {
-      display: table-cell;
-      vertical-align: middle;
-      margin: 2em auto;
+    @keyframes voidFade {
+      0%, 100% { background-color: #0a0a0a; }
+      50% { background-color: #121212; }
     }
 
     h1 {
-      color: #555;
-      font-size: 2em;
-      font-weight: 400;
+      color: #a10f2b;
+      font-size: 3em;
+      text-shadow: 3px 3px 15px rgba(161, 15, 43, 0.6);
+      margin-bottom: 15px;
     }
 
     p {
+      width: 80%;
+      max-width: 380px;
       margin: 0 auto;
-      width: 280px;
+      font-size: 1.3em;
+      color: #c9b37e;
+      text-shadow: 0px 0px 15px rgba(201, 179, 126, 0.3);
+    }
+
+    button {
+      background-color: transparent;
+      color: #c9b37e;
+      border: 2px solid #a10f2b;
+      padding: 12px 24px;
+      font-size: 1.2em;
+      font-family: 'IM Fell English', serif;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      border-radius: 5px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0px 0px 15px rgba(161, 15, 43, 0.5);
+    }
+
+    button:hover {
+      background-color: #a10f2b;
+      color: #0a0a0a;
+      transform: scale(1.1);
+      box-shadow: 0px 0px 20px rgba(161, 15, 43, 0.9);
     }
 
     @media only screen and (max-width: 280px) {
-
-      body,
-      p {
-        width: 95%;
-      }
-
       h1 {
-        font-size: 1.5em;
-        margin: 0 0 0.3em;
+        font-size: 2em;
+        margin-bottom: 10px;
       }
 
+      p {
+        width: 90%;
+        font-size: 1.1em;
+      }
+
+      button {
+        width: 100%;
+        font-size: 1.1em;
+      }
     }
   </style>
 </head>
-
 <body>
-  <h1>Page Not Found</h1>
-  <p>Sorry, but the page you were trying to view does not exist.</p>
+<h1>Você está perdido no Outro Lado</h1>
+<p>A Membrana se rompeu completamente. O Paranormal consome tudo ao seu redor.</p>
+<button onclick="window.history.back()">Voltar</button>
 </body>
-
 </html>
-<!-- IE needs 512+ bytes: https://docs.microsoft.com/archive/blogs/ieinternals/friendly-http-error-pages -->
