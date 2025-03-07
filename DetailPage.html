@@ -5,19 +5,121 @@
   <title>Detalhes do Registro</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    .detail-container {
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      line-height: 1.2;
+    }
+
+    html, body{
+      height: 100%;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f8f8f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background-image: url('path_to_dark_texture.jpg'); /* Textura escura */
+      background-size: cover;
+      animation: mysticGlow 5s infinite; /* Efeito de animação de fundo */
+    }
+
+    @keyframes mysticGlow{
+      0%{
+        background-color: #121212;
+      }
+      50%{
+        background-color: #333;
+      }
+      100%{
+        background-color: #121212;
+      }
+    }
+
+    .detail-container{
       max-width: 600px;
-      margin: 40px auto;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      background: rgba(30, 30, 30, 0.8);
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      backdrop-filter: blur(10px); /* Efeito de desfoque de fundo */
     }
-    .detail-field {
-      margin-bottom: 10px;
+
+    h2{
+      color: #ff4655;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 10px rgba(255, 70, 85, 0.5);
+      font-size: 24px;
     }
-    .detail-label {
+
+    .detail-field{
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+    }
+
+    .detail-label{
       font-weight: bold;
+      text-transform: uppercase;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: #ff4655;
+    }
+
+    .detail-value{
+      font-size: 16px;
+      color: #f8f8f8;
+    }
+
+    .detail-input{
+      padding: 8px;
+      border: 1px solid #ff4655;
+      border-radius: 6px;
+      background: transparent;
+      color: #f8f8f8;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .detail-input:focus{
+      outline: none;
+      border-color: #ff7685;
+      box-shadow: 0px 0px 8px rgba(255, 70, 85, 0.6);
+    }
+
+    #back-button{
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background: #ff4655;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    #back-button:hover{
+      background: #ff7685;
+      transform: scale(1.05);
+    }
+
+    @media only screen and (max-width: 280px){
+      .detail-container{
+        width: 95%;
+        padding: 16px;
+      }
+
+      h2{
+        font-size: 1.5em;
+      }
     }
   </style>
 </head>
@@ -28,7 +130,6 @@
   </div>
   <button id="back-button">Voltar</button>
 </div>
-
 <script>
   function getIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
@@ -37,20 +138,37 @@
 
   function carregarDetalhes() {
     const registros = JSON.parse(localStorage.getItem("registros")) || [];
-    const id = getIdFromUrl(); // Índice do registro
+    const id = getIdFromUrl();
 
     if (id !== null && registros[id]) {
       const registro = registros[id];
-
       const detailContent = document.getElementById("detail-content");
+
       detailContent.innerHTML = `
-          <div class="detail-field"><span class="detail-label">Nome:</span> ${registro.nome}</div>
-          <div class="detail-field"><span class="detail-label">Vida:</span> ${registro.vida}</div>
-          <div class="detail-field"><span class="detail-label">Sanidade:</span> ${registro.sanidade}</div>
-          <div class="detail-field"><span class="detail-label">Esforço:</span> ${registro.esforco}</div>
-          <div class="detail-field"><span class="detail-label">PM:</span> ${registro.pm}</div>
-          <div class="detail-field"><span class="detail-label">Data:</span> ${registro.data}</div>
-        `;
+        <div class="detail-field"><span class="detail-label">Nome:</span> <span class="detail-value">${registro.nome}</span></div>
+
+        <div class="detail-field">
+          <span class="detail-label">Vida Atual / Máxima:</span>
+          <span class="detail-value">${registro.vida_atual} / ${registro.vida_max}</span>
+        </div>
+
+        <div class="detail-field">
+          <span class="detail-label">Sanidade Atual / Máxima:</span>
+          <span class="detail-value">${registro.sanidade_atual} / ${registro.sanidade_max}</span>
+        </div>
+
+        <div class="detail-field">
+          <span class="detail-label">Esforço Atual / Máximo:</span>
+          <span class="detail-value">${registro.esforco_atual} / ${registro.esforco_max}</span>
+        </div>
+
+        <div class="detail-field"><span class="detail-label">PM:</span> <span class="detail-value">${registro.pm}</span></div>
+        <div class="detail-field"><span class="detail-label">Data:</span> <span class="detail-value">${registro.data}</span></div>
+      `;
+    } else {
+      document.getElementById("detail-content").innerHTML = `
+        <p style="color: #ff4655; font-size: 18px;">Registro não encontrado.</p>
+      `;
     }
   }
 
@@ -59,7 +177,11 @@
 
     const backButton = document.getElementById("back-button");
     backButton.addEventListener("click", () => {
-      window.location.href = "PrincipalPage.html";
+      if (document.referrer) {
+        window.history.back();
+      } else {
+        window.location.href = "PrincipalPage.html";
+      }
     });
   });
 </script>

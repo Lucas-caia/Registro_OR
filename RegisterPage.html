@@ -5,32 +5,72 @@
   <title>Adicionar Registro</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #e8e8e8;
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f8f8f8;
       margin: 0;
       padding: 20px;
     }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #1a1a1a;
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff4655;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
     .form-field {
-      margin-bottom: 10px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
     }
+
     label {
-      display: block;
-      margin-bottom: 5px;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: #ff4655;
     }
+
     input {
-      width: 100%;
-      padding: 8px;
+      padding: 10px;
+      border: 1px solid #ff4655;
+      border-radius: 6px;
+      background: transparent;
+      color: #f8f8f8;
+      font-size: 16px;
     }
+
+    input:focus {
+      outline: none;
+      border-color: #ff7685;
+      box-shadow: 0px 0px 8px rgba(255, 70, 85, 0.6);
+    }
+
     #save-button {
       margin-top: 15px;
       padding: 10px 20px;
       cursor: pointer;
-      background-color: #000;
+      background-color: #ff4655;
       color: #fff;
       border: none;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: 0.3s;
     }
+
     #save-button:hover {
-      background-color: #444;
+      background-color: #ff7685;
     }
   </style>
 </head>
@@ -38,54 +78,78 @@
 <h2>Adicionar Registro</h2>
 <div class="form-field">
   <label for="nome">Nome:</label>
-  <input type="text" id="nome">
+  <input type="text" id="nome" required>
 </div>
 <div class="form-field">
-  <label for="vida">Vida:</label>
-  <input type="number" id="vida">
+  <label for="vidaAtual">Vida Atual:</label>
+  <input type="number" id="vidaAtual" min="0" required>
 </div>
 <div class="form-field">
-  <label for="sanidade">Sanidade:</label>
-  <input type="number" id="sanidade">
+  <label for="vidaMax">Vida Máxima:</label>
+  <input type="number" id="vidaMax" min="1" required>
 </div>
 <div class="form-field">
-  <label for="esforco">Esforço:</label>
-  <input type="number" id="esforco">
+  <label for="sanidadeAtual">Sanidade Atual:</label>
+  <input type="number" id="sanidadeAtual" min="0" required>
+</div>
+<div class="form-field">
+  <label for="sanidadeMax">Sanidade Máxima:</label>
+  <input type="number" id="sanidadeMax" min="1" required>
+</div>
+<div class="form-field">
+  <label for="esforcoAtual">Esforço Atual:</label>
+  <input type="number" id="esforcoAtual" min="0" required>
+</div>
+<div class="form-field">
+  <label for="esforcoMax">Esforço Máximo:</label>
+  <input type="number" id="esforcoMax" min="1" required>
 </div>
 <div class="form-field">
   <label for="pm">Pontos de Missão (PM):</label>
-  <input type="number" id="pm">
+  <input type="number" id="pm" min="0" required>
 </div>
 <div class="form-field">
   <label for="data">Data:</label>
-  <input type="date" id="data">
+  <input type="date" id="data" required>
 </div>
 
 <button id="save-button">Salvar</button>
 
 <script>
-  const saveButton = document.getElementById("save-button");
-
-  saveButton.addEventListener("click", () => {
-    // Pega os valores do formulário
-    const nome = document.getElementById("nome").value;
-    const vida = document.getElementById("vida").value;
-    const sanidade = document.getElementById("sanidade").value;
-    const esforco = document.getElementById("esforco").value;
-    const pm = document.getElementById("pm").value;
+  document.getElementById("save-button").addEventListener("click", () => {
+    const nome = document.getElementById("nome").value.trim();
+    const vidaAtual = parseInt(document.getElementById("vidaAtual").value) || 0;
+    const vidaMax = parseInt(document.getElementById("vidaMax").value) || 1;
+    const sanidadeAtual = parseInt(document.getElementById("sanidadeAtual").value) || 0;
+    const sanidadeMax = parseInt(document.getElementById("sanidadeMax").value) || 1;
+    const esforcoAtual = parseInt(document.getElementById("esforcoAtual").value) || 0;
+    const esforcoMax = parseInt(document.getElementById("esforcoMax").value) || 1;
+    const pm = parseInt(document.getElementById("pm").value) || 0;
     const data = document.getElementById("data").value;
 
-    // Monta o objeto
+    if (!nome || !data) {
+      alert("Por favor, preencha todos os campos antes de salvar!");
+      return;
+    }
+
     const novoRegistro = {
       nome,
-      vida,
-      sanidade,
-      esforco,
+      vidaAtual,
+      vidaMax,
+      sanidadeAtual,
+      sanidadeMax,
+      esforcoAtual,
+      esforcoMax,
       pm,
       data
     };
 
-    if (window.opener && !window.opener.closed) {
+    // Salvar no LocalStorage
+    let registros = JSON.parse(localStorage.getItem("registros")) || [];
+    registros.push(novoRegistro);
+    localStorage.setItem("registros", JSON.stringify(registros));
+
+    if (window.opener && typeof window.opener.addRegistro === "function") {
       window.opener.addRegistro(novoRegistro);
     }
 
