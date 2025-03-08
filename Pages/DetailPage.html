@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalhes do Registro</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Estilos específicos para a DetailPage */
+    html, body {
+      width: 100%;
+      height: 100%;
+    }
+    body {
+      animation: mysticGlow 5s infinite;
+    }
+  </style>
+</head>
+<body>
+<div class="detail-container">
+  <h2>Detalhes do Registro</h2>
+  <div id="detail-content">
+    <!-- Detalhes serão inseridos aqui via JavaScript -->
+  </div>
+  <button id="back-button">Voltar</button>
+</div>
+
+<script>
+  function getIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id");
+  }
+
+  function carregarDetalhes() {
+    const registros = JSON.parse(localStorage.getItem("registros")) || [];
+    const id = getIdFromUrl();
+
+    if (id !== null && registros[id]) {
+      const registro = registros[id];
+      const detailContent = document.getElementById("detail-content");
+
+      detailContent.innerHTML = `
+          <div class="detail-field">
+            <span class="detail-label">Nome:</span>
+            <span class="detail-value">${registro.nome}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Vida Atual / Máxima:</span>
+            <span class="detail-value">${registro.vidaAtual} / ${registro.vidaMax}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Sanidade Atual / Máxima:</span>
+            <span class="detail-value">${registro.sanidadeAtual} / ${registro.sanidadeMax}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Esforço Atual / Máximo:</span>
+            <span class="detail-value">${registro.esforcoAtual} / ${registro.esforcoMax}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">PM:</span>
+            <span class="detail-value">${registro.pm}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Data:</span>
+            <span class="detail-value">${registro.data}</span>
+          </div>
+        `;
+    } else {
+      document.getElementById("detail-content").innerHTML = `
+          <p style="color: #ff4655; font-size: 18px;">Registro não encontrado.</p>
+        `;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    carregarDetalhes();
+
+    const backButton = document.getElementById("back-button");
+    backButton.addEventListener("click", () => {
+      if (document.referrer) {
+        window.history.back();
+      } else {
+        window.location.href = "PrincipalPage.html";
+      }
+    });
+  });
+</script>
+</body>
+</html>

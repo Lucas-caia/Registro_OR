@@ -76,44 +76,46 @@
 </head>
 <body>
 <h2>Adicionar Registro</h2>
-<div class="form-field">
-  <label for="nome">Nome:</label>
-  <input type="text" id="nome" required>
-</div>
-<div class="form-field">
-  <label for="vidaAtual">Vida Atual:</label>
-  <input type="number" id="vidaAtual" min="0" required>
-</div>
-<div class="form-field">
-  <label for="vidaMax">Vida Máxima:</label>
-  <input type="number" id="vidaMax" min="1" required>
-</div>
-<div class="form-field">
-  <label for="sanidadeAtual">Sanidade Atual:</label>
-  <input type="number" id="sanidadeAtual" min="0" required>
-</div>
-<div class="form-field">
-  <label for="sanidadeMax">Sanidade Máxima:</label>
-  <input type="number" id="sanidadeMax" min="1" required>
-</div>
-<div class="form-field">
-  <label for="esforcoAtual">Esforço Atual:</label>
-  <input type="number" id="esforcoAtual" min="0" required>
-</div>
-<div class="form-field">
-  <label for="esforcoMax">Esforço Máximo:</label>
-  <input type="number" id="esforcoMax" min="1" required>
-</div>
-<div class="form-field">
-  <label for="pm">Pontos de Missão (PM):</label>
-  <input type="number" id="pm" min="0" required>
-</div>
-<div class="form-field">
-  <label for="data">Data:</label>
-  <input type="date" id="data" required>
-</div>
+<div class="container">
+  <div class="form-field">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" required>
+  </div>
+  <div class="form-field">
+    <label for="vidaAtual">Vida Atual:</label>
+    <input type="number" id="vidaAtual" min="0" required>
+  </div>
+  <div class="form-field">
+    <label for="vidaMax">Vida Máxima:</label>
+    <input type="number" id="vidaMax" min="1" required>
+  </div>
+  <div class="form-field">
+    <label for="sanidadeAtual">Sanidade Atual:</label>
+    <input type="number" id="sanidadeAtual" min="0" required>
+  </div>
+  <div class="form-field">
+    <label for="sanidadeMax">Sanidade Máxima:</label>
+    <input type="number" id="sanidadeMax" min="1" required>
+  </div>
+  <div class="form-field">
+    <label for="esforcoAtual">Esforço Atual:</label>
+    <input type="number" id="esforcoAtual" min="0" required>
+  </div>
+  <div class="form-field">
+    <label for="esforcoMax">Esforço Máximo:</label>
+    <input type="number" id="esforcoMax" min="1" required>
+  </div>
+  <div class="form-field">
+    <label for="pm">Pontos de Missão (PM):</label>
+    <input type="number" id="pm" min="0" required>
+  </div>
+  <div class="form-field">
+    <label for="data">Data:</label>
+    <input type="date" id="data" required>
+  </div>
 
-<button id="save-button">Salvar</button>
+  <button id="save-button">Salvar</button>
+</div>
 
 <script>
   document.getElementById("save-button").addEventListener("click", () => {
@@ -144,11 +146,12 @@
       data
     };
 
-    // Salvar no LocalStorage
+    // Salva no LocalStorage
     let registros = JSON.parse(localStorage.getItem("registros")) || [];
     registros.push(novoRegistro);
     localStorage.setItem("registros", JSON.stringify(registros));
 
+    // Se a página principal estiver aberta e expuser a função addRegistro, use-a
     if (window.opener && typeof window.opener.addRegistro === "function") {
       window.opener.addRegistro(novoRegistro);
     }
