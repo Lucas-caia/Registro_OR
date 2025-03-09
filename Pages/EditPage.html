@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Adicionar Registro</title>
+  <title>Editar Registro</title>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -11,7 +11,6 @@
       margin: 0;
       padding: 20px;
     }
-
     .container {
       max-width: 600px;
       margin: 40px auto;
@@ -20,20 +19,17 @@
       border-radius: 10px;
       box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
     }
-
     h2 {
       text-align: center;
       color: #ff4655;
       text-transform: uppercase;
       letter-spacing: 2px;
     }
-
     .form-field {
       margin-bottom: 14px;
       display: flex;
       flex-direction: column;
     }
-
     label {
       font-weight: bold;
       text-transform: uppercase;
@@ -41,7 +37,6 @@
       margin-bottom: 4px;
       color: #ff4655;
     }
-
     input {
       padding: 10px;
       border: 1px solid #ff4655;
@@ -50,13 +45,11 @@
       color: #f8f8f8;
       font-size: 16px;
     }
-
     input:focus {
       outline: none;
       border-color: #ff7685;
       box-shadow: 0px 0px 8px rgba(255, 70, 85, 0.6);
     }
-
     #save-button {
       margin-top: 15px;
       padding: 10px 20px;
@@ -68,14 +61,13 @@
       text-transform: uppercase;
       transition: 0.3s;
     }
-
     #save-button:hover {
       background-color: #ff7685;
     }
   </style>
 </head>
 <body>
-<h2>Adicionar Registro</h2>
+<h2>Editar Registro</h2>
 <div class="container">
   <div class="form-field">
     <label for="nome">Nome:</label>
@@ -118,7 +110,46 @@
 </div>
 
 <script>
+  // Obtém o "id" da query string
+  function getIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id");
+  }
+
+  // Carrega os dados do registro e preenche os campos
+  document.addEventListener("DOMContentLoaded", () => {
+    const id = getIdFromUrl();
+    let registros = JSON.parse(localStorage.getItem("registros")) || [];
+
+    if (id === null || !registros[id]) {
+      alert("Registro não encontrado!");
+      window.close();
+      return;
+    }
+
+    const registro = registros[id];
+    document.getElementById("nome").value = registro.nome;
+    document.getElementById("vidaAtual").value = registro.vidaAtual;
+    document.getElementById("vidaMax").value = registro.vidaMax;
+    document.getElementById("sanidadeAtual").value = registro.sanidadeAtual;
+    document.getElementById("sanidadeMax").value = registro.sanidadeMax;
+    document.getElementById("esforcoAtual").value = registro.esforcoAtual;
+    document.getElementById("esforcoMax").value = registro.esforcoMax;
+    document.getElementById("pm").value = registro.pm;
+    document.getElementById("data").value = registro.data;
+  });
+
+  // Ao clicar no botão salvar, atualiza o registro no localStorage
   document.getElementById("save-button").addEventListener("click", () => {
+    const id = getIdFromUrl();
+    let registros = JSON.parse(localStorage.getItem("registros")) || [];
+
+    if (id === null || !registros[id]) {
+      alert("Registro não encontrado!");
+      return;
+    }
+
+    // Coleta os valores dos campos
     const nome = document.getElementById("nome").value.trim();
     const vidaAtual = parseInt(document.getElementById("vidaAtual").value) || 0;
     const vidaMax = parseInt(document.getElementById("vidaMax").value) || 1;
@@ -130,11 +161,12 @@
     const data = document.getElementById("data").value;
 
     if (!nome || !data) {
-      alert("Por favor, preencha todos os campos antes de salvar!");
+      alert("Por favor, preencha todos os campos!");
       return;
     }
 
-    const novoRegistro = {
+    // Atualiza o registro
+    registros[id] = {
       nome,
       vidaAtual,
       vidaMax,
@@ -146,12 +178,11 @@
       data
     };
 
-    let registros = JSON.parse(localStorage.getItem("registros")) || [];
-    registros.push(novoRegistro);
     localStorage.setItem("registros", JSON.stringify(registros));
 
-    if (window.opener && typeof window.opener.addRegistro === "function") {
-      window.opener.addRegistro(novoRegistro);
+    // Se a PrincipalPage estiver aberta, recarrega a lista (ou você pode chamar uma função específica)
+    if (window.opener && !window.opener.closed) {
+      window.opener.location.reload();
     }
 
     window.close();

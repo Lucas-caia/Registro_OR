@@ -4,22 +4,14 @@
   <meta charset="UTF-8">
   <title>Detalhes do Registro</title>
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    /* Estilos específicos para a DetailPage */
-    html, body {
-      width: 100%;
-      height: 100%;
-    }
-    body {
-      animation: mysticGlow 5s infinite;
-    }
-  </style>
 </head>
 <body>
 <div class="detail-container">
-  <h2>Detalhes do Registro</h2>
+  <div class="detail-header">
+    <h2>Detalhes do Registro</h2>
+    <span id="edit-button">&#9881;</span>
+  </div>
   <div id="detail-content">
-    <!-- Detalhes serão inseridos aqui via JavaScript -->
   </div>
   <button id="back-button">Voltar</button>
 </div>
@@ -73,6 +65,16 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     carregarDetalhes();
+
+    const editButton = document.getElementById("edit-button");
+    editButton.addEventListener("click", () => {
+      const id = getIdFromUrl();
+      if (id !== null) {
+        window.open(`EditPage.html?id=${id}`, "Editar Registro", "width=600,height=600");
+      } else {
+        alert("Registro não encontrado para edição!");
+      }
+    });
 
     const backButton = document.getElementById("back-button");
     backButton.addEventListener("click", () => {

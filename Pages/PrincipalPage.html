@@ -10,8 +10,11 @@
   <h1>Registros</h1>
 </header>
 
+<div id="search-container">
+  <input type="text" id="search-input" placeholder="Pesquisar por nome...">
+</div>
+
 <main id="registros-container">
-  <!-- Os registros serão inseridos aqui dinamicamente -->
 </main>
 
 <button id="add-button">+</button>
@@ -19,22 +22,25 @@
 <script>
   let registros = JSON.parse(localStorage.getItem("registros")) || [];
 
-  function salvarRegistrosNoLocalStorage(){
+  function salvarRegistrosNoLocalStorage() {
     localStorage.setItem("registros", JSON.stringify(registros));
   }
 
-  function carregarRegistros(){
+  function carregarRegistros(registrosFiltrados = null) {
     const container = document.getElementById("registros-container");
     container.innerHTML = "";
+    const lista = registrosFiltrados || registros;
 
-    if (registros.length === 0) {
+    if (lista.length === 0) {
       container.innerHTML = "<p style='text-align: center; color: #bbb;'>Nenhum registro encontrado.</p>";
       return;
     }
 
-    registros.forEach((registro, index) => {
+    lista.forEach((registro) => {
+      const index = registros.findIndex(r => r === registro);
       const div = document.createElement("div");
       div.classList.add("registro");
+
       div.innerHTML = `
           <div class="registro-header">
             <span class="registro-star">&#9733;</span>
@@ -50,19 +56,26 @@
             <div class="registro-chip">Data: ${registro.data}</div>
           </div>
         `;
+
       div.addEventListener("click", () => {
         window.location.href = `DetailPage.html?id=${index}`;
       });
+
+      const gear = div.querySelector(".registro-gear");
+      gear.addEventListener("click", (event) => {
+        event.stopPropagation();
+        window.open(`EditPage.html?id=${index}`, "Editar Registro", "width=600,height=600");
+      });
+
       container.appendChild(div);
     });
   }
 
-  function addRegistro(novoRegistro){
+  function addRegistro(novoRegistro) {
     registros.push(novoRegistro);
     salvarRegistrosNoLocalStorage();
     carregarRegistros();
   }
-
   window.addRegistro = addRegistro;
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -70,6 +83,16 @@
     addButton.addEventListener("click", () => {
       window.open("RegisterPage.html", "Cadastro", "width=600,height=600");
     });
+
+    const searchInput = document.getElementById("search-input");
+    searchInput.addEventListener("input", function () {
+      const filtro = this.value.toLowerCase();
+      const registrosFiltrados = registros.filter(registro =>
+        registro.nome.toLowerCase().includes(filtro)
+      );
+      carregarRegistros(registrosFiltrados);
+    });
+
     carregarRegistros();
   });
 </script>
