@@ -1,121 +1,269 @@
-/* Importação da Fonte */
-@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English&family=EB+Garamond&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap');
 
-/* Estilo do Projeto */
-body{
+body {
   font-family: 'IM Fell English', serif;
   background-color: #0a0a0a;
-  background-size: cover;
-  background-blend-mode: multiply;
   color: #c9b37e;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
 
-header{
+header {
   width: 100%;
-  background-color: #1a0e1a;
-  padding: 15px;
+  background-color: #1c1c1c;
+  color: #c9b37e;
   text-align: center;
+  padding: 20px;
   font-size: 2em;
-  font-weight: bold;
-  font-family: 'EB Garamond', serif;
-  color: #a10f2b;
-  text-shadow: 3px 3px 15px rgba(161, 15, 43, 0.6);
+  text-shadow: 2px 2px 10px rgba(201, 179, 126, 0.5);
+  border-bottom: 2px solid #c9b37e;
 }
 
-#registros-container{
+#search-container {
+  margin: 20px;
+  width: 80%;
+  text-align: center;
+}
+
+#search-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #c9b37e;
+  border-radius: 5px;
+  background-color: #1c1c1c;
+  color: #c9b37e;
+  font-size: 1em;
+}
+
+/* Container de Registros */
+#registros-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 15px;
+  gap: 20px;
   padding: 20px;
   width: 80%;
 }
 
-/* Botão de Adicionar */
-@keyframes pulse{
-  0% { box-shadow: 0 0 10px rgba(161, 15, 43, 0.6); }
-  50% { box-shadow: 0 0 15px rgba(161, 15, 43, 1); }
-  100% { box-shadow: 0 0 10px rgba(161, 15, 43, 0.6); }
-}
-
-#add-button{
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #a10f2b;
-  color: white;
-  font-size: 24px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0px 0px 15px rgba(161, 15, 43, 0.5);
-  transition: all 0.4s ease;
-  animation: pulse 2s infinite alternate;
-}
-
-#add-button:hover{
-  background-color: #c71c3f;
-  transform: scale(1.1);
-  box-shadow: 0px 0px 20px rgba(161, 15, 43, 0.9);
-}
-
 /* Cartão de Registro */
-.registro{
-  position: relative;
-  background: rgba(30, 15, 30, 0.85);
-  border: 1px solid #a10f2b;
-  border-radius: 8px;
-  width: 240px;
+.registro {
+  background-color: #1c1c1c;
+  border: 2px solid #c9b37e;
+  border-radius: 10px;
   padding: 15px;
-  box-shadow: 2px 2px 15px rgba(161, 15, 43, 0.4);
+  width: 260px;
+  box-shadow: 0px 0px 15px rgba(201, 179, 126, 0.3);
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.registro:hover{
-  background-color: #2b152b;
+.registro:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 0px 20px rgba(201, 179, 126, 0.6);
 }
 
-/* Cabeçalho do Registro */
-.registro-header{
+/* Cabeçalho e Corpo do Registro */
+.registro-header {
   display: flex;
   justify-content: space-between;
+  font-size: 1.2em;
   margin-bottom: 10px;
 }
 
-.registro-star, .registro-gear{
-  font-size: 18px;
-  cursor: pointer;
-  color: #c9b37e;
-  transition: color 0.3s ease-in-out;
-}
-
-.registro-star:hover, .registro-gear:hover{
-  color: #e8d19c;
-}
-
-/* Corpo dos Registros - Chips */
-.registro-body{
+.registro-body {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.registro-chip{
-  background-color: #3a1e3a;
+.registro-chip {
+  background-color: #2a2a2a;
+  border: 1px solid #c9b37e;
   border-radius: 15px;
   padding: 5px 10px;
-  font-size: 14px;
-  white-space: nowrap;
+  font-size: 1em;
   color: #c9b37e;
-  box-shadow: 0px 0px 10px rgba(201, 179, 126, 0.3);
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  white-space: nowrap;
+}
+
+/* Botão de Adicionar */
+#add-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #a10f2b;
+  color: #0a0a0a;
+  font-size: 30px;
+  border: 2px solid #c9b37e;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#add-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 15px rgba(161, 15, 43, 0.9);
+  background-color: #c91639;
+}
+
+/* Estilo para Estrela Favoritada */
+.registro-star.favorito {
+  color: #ffeb3b;
+  animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px #ffeb3b; }
+  to { text-shadow: 0 0 20px #ffeb3b; }
+}
+
+/* ============================================= */
+/*             Estilos da DetailPage            */
+/* ============================================= */
+
+.detail-container {
+  background-color: #1c1c1c;
+  border: 2px solid #c9b37e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(201, 179, 126, 0.5);
+  max-width: 90%;
+  width: 500px;
+  text-align: left;
+  position: relative;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.detail-header h2 {
+  margin: 0;
+  font-size: 2em;
+  color: #a10f2b;
+  text-shadow: 2px 2px 10px rgba(161, 15, 43, 0.6);
+}
+
+#edit-button {
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 5px;
+  transition: transform 0.3s ease;
+}
+
+#edit-button:hover {
+  transform: scale(1.1);
+}
+
+.detail-field {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.detail-label {
+  font-weight: bold;
+  color: #c9b37e;
+}
+
+.detail-value {
+  color: #fff;
+}
+
+.button {
+  margin-top: 20px;
+  background-color: transparent;
+  color: #c9b37e;
+  border: 2px solid #a10f2b;
+  padding: 12px 24px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  border-radius: 5px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0px 0px 15px rgba(161, 15, 43, 0.5);
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.button:hover {
+  background-color: #a10f2b;
+  color: #0a0a0a;
+  transform: scale(1.1);
+  box-shadow: 0px 0px 20px rgba(161, 15, 43, 0.9);
+}
+
+/* ============================================= */
+/*            Estilos da RegisterPage           */
+/* ============================================= */
+
+.register-container {
+  background-color: #0a0a0a;
+  border: 2px solid #c9b37e;
+  border-radius: 10px;
+  padding: 20px;
+  width: 350px;
+  box-shadow: 0px 0px 15px rgba(201, 179, 126, 0.3);
+  text-align: center;
+}
+
+.register-title {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #f4c430;
+  text-shadow: 2px 2px 10px rgba(201, 179, 126, 0.6);
+  margin-bottom: 15px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+label {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+
+.register-input {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #c9b37e;
+  background-color: #1c1c1c;
+  color: #c9b37e;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.register-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #c9b37e;
+  color: #0a0a0a;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.register-button:hover {
+  background-color: #e0c987;
+  transform: scale(1.05);
 }

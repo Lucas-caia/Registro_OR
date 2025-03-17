@@ -3,115 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Página Principal</title>
-  <!-- Se desejar utilizar um arquivo CSS externo, ajuste o href -->
-  <!-- <link rel="stylesheet" href="styles.css"> -->
-  <style>
-    body{
-      font-family: 'IM Fell English', serif;
-      background-color: #0a0a0a;
-      color: #c9b37e;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-    header{
-      width: 100%;
-      background-color: #1c1c1c;
-      color: #c9b37e;
-      text-align: center;
-      padding: 20px;
-      font-size: 2em;
-      text-shadow: 2px 2px 10px rgba(201, 179, 126, 0.5);
-      border-bottom: 2px solid #c9b37e;
-    }
-    /* Estilização para a área de busca */
-    #search-container {
-      margin: 20px;
-      width: 80%;
-      text-align: center;
-    }
-    #search-input {
-      width: 100%;
-      padding: 10px;
-      border: 2px solid #c9b37e;
-      border-radius: 5px;
-      background-color: #1c1c1c;
-      color: #c9b37e;
-      font-size: 1em;
-    }
-    #registros-container{
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      padding: 20px;
-      width: 80%;
-    }
-    .registro{
-      background-color: #1c1c1c;
-      border: 2px solid #c9b37e;
-      border-radius: 10px;
-      padding: 15px;
-      width: 260px;
-      box-shadow: 0px 0px 15px rgba(201, 179, 126, 0.3);
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .registro:hover{
-      transform: scale(1.05);
-      box-shadow: 0px 0px 20px rgba(201, 179, 126, 0.6);
-    }
-    .registro-header{
-      display: flex;
-      justify-content: space-between;
-      font-size: 1.2em;
-      margin-bottom: 10px;
-    }
-    .registro-body{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .registro-chip{
-      background-color: #2a2a2a;
-      border: 1px solid #c9b37e;
-      border-radius: 15px;
-      padding: 5px 10px;
-      font-size: 1em;
-      color: #c9b37e;
-      white-space: nowrap;
-    }
-    #add-button{
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: #a10f2b;
-      color: #0a0a0a;
-      font-size: 30px;
-      border: 2px solid #c9b37e;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    #add-button:hover{
-      transform: scale(1.1);
-      box-shadow: 0px 0px 15px rgba(161, 15, 43, 0.9);
-      background-color: #c91639;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <header>
   <h1>Registros</h1>
 </header>
 
-<!-- Caixa de busca para filtrar os registros -->
 <div id="search-container">
   <input type="text" id="search-input" placeholder="Pesquisar por nome...">
 </div>
@@ -120,18 +18,17 @@
 <button id="add-button">+</button>
 
 <script>
-  // Recupera os registros do localStorage ou inicia com array vazio
   let registros = JSON.parse(localStorage.getItem("registros")) || [];
 
   function salvarRegistrosNoLocalStorage() {
     localStorage.setItem("registros", JSON.stringify(registros));
   }
 
-  // Função para renderizar os registros (mantém funcionalidades de clique, pesquisa e edição)
   function renderizarRegistros(registrosFiltrados = null) {
     const container = document.getElementById("registros-container");
     container.innerHTML = "";
-    const lista = registrosFiltrados || registros;
+    let lista = registrosFiltrados || registros;
+    lista = lista.slice().sort((a, b) => (b.favorito ? 1 : 0) - (a.favorito ? 1 : 0));
 
     if (lista.length === 0) {
       container.innerHTML = "<p style='text-align: center; color: #bbb;'>Nenhum registro encontrado.</p>";
@@ -139,14 +36,15 @@
     }
 
     lista.forEach((registro) => {
-      // Obtém o índice do registro na lista completa
       const index = registros.findIndex(r => r === registro);
       const div = document.createElement("div");
       div.classList.add("registro");
 
+      const starClass = registro.favorito ? "registro-star favorito" : "registro-star";
+
       div.innerHTML = `
           <div class="registro-header">
-            <span class="registro-star">&#9733;</span>
+            <span class="${starClass}">&#9733;</span>
             <span class="registro-gear">&#9881;</span>
           </div>
           <div class="registro-body">
@@ -160,23 +58,28 @@
           </div>
         `;
 
-      // Clique no registro direciona para a página de detalhes
       div.addEventListener("click", () => {
         window.location.href = `DetailPage.html?id=${index}`;
       });
 
-      // Clique na engrenagem abre a página de edição (sem disparar o clique do registro)
       const gear = div.querySelector(".registro-gear");
       gear.addEventListener("click", (event) => {
         event.stopPropagation();
         window.open(`EditPage.html?id=${index}`, "Editar Registro", "width=600,height=600");
       });
 
+      const star = div.querySelector(".registro-star");
+      star.addEventListener("click", (event) => {
+        event.stopPropagation();
+        registros[index].favorito = !registros[index].favorito;
+        salvarRegistrosNoLocalStorage();
+        renderizarRegistros();
+      });
+
       container.appendChild(div);
     });
   }
 
-  // Função para adicionar um novo registro (disponível globalmente)
   function addRegistro(novoRegistro) {
     registros.push(novoRegistro);
     salvarRegistrosNoLocalStorage();

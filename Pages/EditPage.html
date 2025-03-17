@@ -3,68 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Editar Registro</title>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #121212;
-      color: #f8f8f8;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background-color: #1a1a1a;
-      padding: 24px;
-      border-radius: 10px;
-      box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
-    }
-    h2 {
-      text-align: center;
-      color: #ff4655;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-    .form-field {
-      margin-bottom: 14px;
-      display: flex;
-      flex-direction: column;
-    }
-    label {
-      font-weight: bold;
-      text-transform: uppercase;
-      font-size: 14px;
-      margin-bottom: 4px;
-      color: #ff4655;
-    }
-    input {
-      padding: 10px;
-      border: 1px solid #ff4655;
-      border-radius: 6px;
-      background: transparent;
-      color: #f8f8f8;
-      font-size: 16px;
-    }
-    input:focus {
-      outline: none;
-      border-color: #ff7685;
-      box-shadow: 0px 0px 8px rgba(255, 70, 85, 0.6);
-    }
-    #save-button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      cursor: pointer;
-      background-color: #ff4655;
-      color: #fff;
-      border: none;
-      font-weight: bold;
-      text-transform: uppercase;
-      transition: 0.3s;
-    }
-    #save-button:hover {
-      background-color: #ff7685;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/edit.css">
 </head>
 <body>
 <h2>Editar Registro</h2>
@@ -105,18 +44,15 @@
     <label for="data">Data:</label>
     <input type="date" id="data" required>
   </div>
-
   <button id="save-button">Salvar</button>
 </div>
 
 <script>
-  // Obtém o "id" da query string
   function getIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get("id");
   }
 
-  // Carrega os dados do registro e preenche os campos
   document.addEventListener("DOMContentLoaded", () => {
     const id = getIdFromUrl();
     let registros = JSON.parse(localStorage.getItem("registros")) || [];
@@ -139,7 +75,6 @@
     document.getElementById("data").value = registro.data;
   });
 
-  // Ao clicar no botão salvar, atualiza o registro no localStorage
   document.getElementById("save-button").addEventListener("click", () => {
     const id = getIdFromUrl();
     let registros = JSON.parse(localStorage.getItem("registros")) || [];
@@ -149,7 +84,6 @@
       return;
     }
 
-    // Coleta os valores dos campos
     const nome = document.getElementById("nome").value.trim();
     const vidaAtual = parseInt(document.getElementById("vidaAtual").value) || 0;
     const vidaMax = parseInt(document.getElementById("vidaMax").value) || 1;
@@ -165,7 +99,6 @@
       return;
     }
 
-    // Atualiza o registro
     registros[id] = {
       nome,
       vidaAtual,
@@ -180,7 +113,6 @@
 
     localStorage.setItem("registros", JSON.stringify(registros));
 
-    // Se a PrincipalPage estiver aberta, recarrega a lista (ou você pode chamar uma função específica)
     if (window.opener && !window.opener.closed) {
       window.opener.location.reload();
     }
