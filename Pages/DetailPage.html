@@ -34,29 +34,64 @@
 
     if (id !== null && registros[id]) {
       const registro = registros[id];
+      // Para os campos de listas, caso o registro tenha sido salvo como array, vamos juntar com vírgula.
+      const formatList = (lista) => Array.isArray(lista) ? lista.join(", ") : lista;
+
       detailContent.innerHTML = `
           <div class="detail-field">
             <span class="detail-label">Nome:</span>
             <span class="detail-value">${registro.nome}</span>
           </div>
           <div class="detail-field">
-            <span class="detail-label">Vida Atual / Máxima:</span>
-            <span class="detail-value">${registro.vidaAtual} / ${registro.vidaMax}</span>
+            <span class="detail-label">Vida Máxima:</span>
+            <span class="detail-value">${registro.vidaMax}</span>
           </div>
           <div class="detail-field">
-            <span class="detail-label">Sanidade Atual / Máxima:</span>
-            <span class="detail-value">${registro.sanidadeAtual} / ${registro.sanidadeMax}</span>
+            <span class="detail-label">Sanidade Máxima:</span>
+            <span class="detail-value">${registro.sanidadeMax}</span>
           </div>
           <div class="detail-field">
-            <span class="detail-label">Esforço Atual / Máximo:</span>
-            <span class="detail-value">${registro.esforcoAtual} / ${registro.esforcoMax}</span>
+            <span class="detail-label">Esforço Máximo:</span>
+            <span class="detail-value">${registro.esforcoMax}</span>
           </div>
           <div class="detail-field">
-            <span class="detail-label">PM:</span>
+            <span class="detail-label">Pontos de Missão (PM):</span>
             <span class="detail-value">${registro.pm}</span>
           </div>
           <div class="detail-field">
-            <span class="detail-label">Data:</span>
+            <span class="detail-label">Dinheiro:</span>
+            <span class="detail-value">${registro.dinheiro}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Classe:</span>
+            <span class="detail-value">${registro.classe}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Trilha:</span>
+            <span class="detail-value">${registro.trilha}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Origem:</span>
+            <span class="detail-value">${registro.origem}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Idade:</span>
+            <span class="detail-value">${registro.idade}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Registro de Missões:</span>
+            <span class="detail-value">${formatList(registro.missoes)}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Habilidades e Poderes:</span>
+            <span class="detail-value">${formatList(registro.habilidades)}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Rituais:</span>
+            <span class="detail-value">${formatList(registro.rituais)}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Data (Última modificação):</span>
             <span class="detail-value">${registro.data}</span>
           </div>
         `;
@@ -70,7 +105,7 @@
     const element = document.querySelector(".detail-container");
     const opt = {
       margin:       0.5,
-      filename:     'Detalhes_do_Registro.pdf', //dps mudar essa bomba
+      filename:     'Detalhes_do_Registro.pdf',
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { scale: 2 },
       jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }

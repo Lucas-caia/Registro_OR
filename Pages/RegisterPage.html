@@ -33,6 +33,48 @@
     <label for="dinheiro">Dinheiro:</label>
     <input type="number" id="dinheiro" class="register-input" min="0" required>
   </div>
+
+  <!-- Novos campos -->
+  <div class="form-field">
+    <label for="classe">Classe:</label>
+    <select id="classe" class="register-input" required>
+      <option value="">Selecione</option>
+      <option value="Combatente">Combatente</option>
+      <option value="Especialista">Especialista</option>
+      <option value="Ocultista">Ocultista</option>
+    </select>
+  </div>
+  <div class="form-field">
+    <label for="trilha">Trilha:</label>
+    <input type="text" id="trilha" class="register-input" required>
+  </div>
+  <div class="form-field">
+    <label for="origem">Origem:</label>
+    <select id="origem" class="register-input" required>
+      <option value="">Selecione</option>
+      <option value="Acadêmico">Acadêmico</option>
+      <option value="Lutador">Lutador</option>
+      <option value="Vitima">Vitima</option>
+    </select>
+  </div>
+  <div class="form-field">
+    <label for="idade">Idade:</label>
+    <input type="number" id="idade" class="register-input" min="0" required>
+  </div>
+  <div class="form-field">
+    <label for="missoes">Registro de Missões:</label>
+    <textarea id="missoes" class="register-input" placeholder="Digite as missões separadas por vírgula"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="habilidades">Habilidades e Poderes:</label>
+    <textarea id="habilidades" class="register-input" placeholder="Digite as habilidades separadas por vírgula"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="rituais">Rituais:</label>
+    <textarea id="rituais" class="register-input" placeholder="Digite os rituais separados por vírgula"></textarea>
+  </div>
+
+  <!-- O campo data aqui registra a data de criação; posteriormente, no EditPage, esse campo será atualizado -->
   <div class="form-field">
     <label for="data">Data:</label>
     <input type="date" id="data" class="register-input" required>
@@ -48,10 +90,18 @@
     const esforcoMax = parseInt(document.getElementById("esforcoMax").value) || 1;
     const pm = parseInt(document.getElementById("pm").value) || 0;
     const dinheiro = parseInt(document.getElementById("dinheiro").value) || 0;
+    const classe = document.getElementById("classe").value;
+    const trilha = document.getElementById("trilha").value.trim();
+    const origem = document.getElementById("origem").value;
+    const idade = parseInt(document.getElementById("idade").value) || 0;
+    // Para as listas, armazenamos um array de strings separadas pela vírgula (removendo espaços extras)
+    const missoes = document.getElementById("missoes").value.split(",").map(item => item.trim()).filter(item => item);
+    const habilidades = document.getElementById("habilidades").value.split(",").map(item => item.trim()).filter(item => item);
+    const rituais = document.getElementById("rituais").value.split(",").map(item => item.trim()).filter(item => item);
     const data = document.getElementById("data").value;
 
-    if (!nome || !data) {
-      alert("Por favor, preencha todos os campos antes de salvar!");
+    if (!nome || !data || !classe || !trilha || !origem) {
+      alert("Por favor, preencha todos os campos obrigatórios antes de salvar!");
       return;
     }
 
@@ -62,6 +112,13 @@
       esforcoMax,
       pm,
       dinheiro,
+      classe,
+      trilha,
+      origem,
+      idade,
+      missoes,
+      habilidades,
+      rituais,
       data
     };
 

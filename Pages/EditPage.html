@@ -13,24 +13,12 @@
     <input type="text" id="nome" required>
   </div>
   <div class="form-field">
-    <label for="vidaAtual">Vida Atual:</label>
-    <input type="number" id="vidaAtual" min="0" required>
-  </div>
-  <div class="form-field">
     <label for="vidaMax">Vida Máxima:</label>
     <input type="number" id="vidaMax" min="1" required>
   </div>
   <div class="form-field">
-    <label for="sanidadeAtual">Sanidade Atual:</label>
-    <input type="number" id="sanidadeAtual" min="0" required>
-  </div>
-  <div class="form-field">
     <label for="sanidadeMax">Sanidade Máxima:</label>
     <input type="number" id="sanidadeMax" min="1" required>
-  </div>
-  <div class="form-field">
-    <label for="esforcoAtual">Esforço Atual:</label>
-    <input type="number" id="esforcoAtual" min="0" required>
   </div>
   <div class="form-field">
     <label for="esforcoMax">Esforço Máximo:</label>
@@ -41,11 +29,54 @@
     <input type="number" id="pm" min="0" required>
   </div>
   <div class="form-field">
-    <label for="data">Data:</label>
+    <label for="dinheiro">Dinheiro:</label>
+    <input type="number" id="dinheiro" min="0" required>
+  </div>
+  <!-- Novos campos -->
+  <div class="form-field">
+    <label for="classe">Classe:</label>
+    <select id="classe" required>
+      <option value="">Selecione</option>
+      <option value="Combatente">Combatente</option>
+      <option value="Especialista">Especialista</option>
+      <option value="Ocultista">Ocultista</option>
+    </select>
+  </div>
+  <div class="form-field">
+    <label for="trilha">Trilha:</label>
+    <input type="text" id="trilha" required>
+  </div>
+  <div class="form-field">
+    <label for="origem">Origem:</label>
+    <select id="origem" required>
+      <option value="">Selecione</option>
+      <option value="Acadêmico">Acadêmico</option>
+      <option value="Lutador">Lutador</option>
+      <option value="Vitima">Vitima</option>
+    </select>
+  </div>
+  <div class="form-field">
+    <label for="idade">Idade:</label>
+    <input type="number" id="idade" min="0" required>
+  </div>
+  <div class="form-field">
+    <label for="missoes">Registro de Missões:</label>
+    <textarea id="missoes" placeholder="Digite as missões separadas por vírgula"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="habilidades">Habilidades e Poderes:</label>
+    <textarea id="habilidades" placeholder="Digite as habilidades separadas por vírgula"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="rituais">Rituais:</label>
+    <textarea id="rituais" placeholder="Digite os rituais separados por vírgula"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="data">Data (Última modificação):</label>
     <input type="date" id="data" required>
   </div>
 
-  <!-- Container para os botões, que serão exibidos um à esquerda e outro à direita -->
+  <!-- Container para os botões -->
   <div class="button-container">
     <button id="save-button">Salvar</button>
     <button id="delete-button">Excluir</button>
@@ -70,13 +101,18 @@
 
     const registro = registros[id];
     document.getElementById("nome").value = registro.nome;
-    document.getElementById("vidaAtual").value = registro.vidaAtual;
     document.getElementById("vidaMax").value = registro.vidaMax;
-    document.getElementById("sanidadeAtual").value = registro.sanidadeAtual;
     document.getElementById("sanidadeMax").value = registro.sanidadeMax;
-    document.getElementById("esforcoAtual").value = registro.esforcoAtual;
     document.getElementById("esforcoMax").value = registro.esforcoMax;
     document.getElementById("pm").value = registro.pm;
+    document.getElementById("dinheiro").value = registro.dinheiro;
+    document.getElementById("classe").value = registro.classe || "";
+    document.getElementById("trilha").value = registro.trilha || "";
+    document.getElementById("origem").value = registro.origem || "";
+    document.getElementById("idade").value = registro.idade || "";
+    document.getElementById("missoes").value = registro.missoes ? registro.missoes.join(", ") : "";
+    document.getElementById("habilidades").value = registro.habilidades ? registro.habilidades.join(", ") : "";
+    document.getElementById("rituais").value = registro.rituais ? registro.rituais.join(", ") : "";
     document.getElementById("data").value = registro.data;
   });
 
@@ -90,29 +126,39 @@
     }
 
     const nome = document.getElementById("nome").value.trim();
-    const vidaAtual = parseInt(document.getElementById("vidaAtual").value) || 0;
     const vidaMax = parseInt(document.getElementById("vidaMax").value) || 1;
-    const sanidadeAtual = parseInt(document.getElementById("sanidadeAtual").value) || 0;
     const sanidadeMax = parseInt(document.getElementById("sanidadeMax").value) || 1;
-    const esforcoAtual = parseInt(document.getElementById("esforcoAtual").value) || 0;
     const esforcoMax = parseInt(document.getElementById("esforcoMax").value) || 1;
     const pm = parseInt(document.getElementById("pm").value) || 0;
+    const dinheiro = parseInt(document.getElementById("dinheiro").value) || 0;
+    const classe = document.getElementById("classe").value;
+    const trilha = document.getElementById("trilha").value.trim();
+    const origem = document.getElementById("origem").value;
+    const idade = parseInt(document.getElementById("idade").value) || 0;
+    const missoes = document.getElementById("missoes").value.split(",").map(item => item.trim()).filter(item => item);
+    const habilidades = document.getElementById("habilidades").value.split(",").map(item => item.trim()).filter(item => item);
+    const rituais = document.getElementById("rituais").value.split(",").map(item => item.trim()).filter(item => item);
     const data = document.getElementById("data").value;
 
-    if (!nome || !data) {
-      alert("Por favor, preencha todos os campos!");
+    if (!nome || !data || !classe || !trilha || !origem) {
+      alert("Por favor, preencha todos os campos obrigatórios!");
       return;
     }
 
     registros[id] = {
       nome,
-      vidaAtual,
       vidaMax,
-      sanidadeAtual,
       sanidadeMax,
-      esforcoAtual,
       esforcoMax,
       pm,
+      dinheiro,
+      classe,
+      trilha,
+      origem,
+      idade,
+      missoes,
+      habilidades,
+      rituais,
       data
     };
 
