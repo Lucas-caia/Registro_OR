@@ -94,7 +94,6 @@
     const trilha = document.getElementById("trilha").value.trim();
     const origem = document.getElementById("origem").value;
     const idade = parseInt(document.getElementById("idade").value) || 0;
-    // Para as listas, armazenamos um array de strings separadas pela vírgula (removendo espaços extras)
     const missoes = document.getElementById("missoes").value.split(",").map(item => item.trim()).filter(item => item);
     const habilidades = document.getElementById("habilidades").value.split(",").map(item => item.trim()).filter(item => item);
     const rituais = document.getElementById("rituais").value.split(",").map(item => item.trim()).filter(item => item);

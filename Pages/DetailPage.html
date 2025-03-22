@@ -92,7 +92,7 @@
           </div>
           <div class="detail-field">
             <span class="detail-label">Data (Última modificação):</span>
-            <span class="detail-value">${registro.data}</span>
+            <span class="detail-value">${new Date().toISOString().slice(0,10)}</span>
           </div>
         `;
     } else {

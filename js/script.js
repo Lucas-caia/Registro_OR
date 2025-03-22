@@ -1,32 +1,64 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const registrosContainer = document.getElementById("registros-container");
-  const addButton = document.getElementById("add-button");
 
-  const registros = [
-    { nome: "Jogador 1", vida: 100, sanidade: 50, dinheiro: 200, pm: 5 },
-    { nome: "Jogador 2", vida: 80, sanidade: 40, dinheiro: 150, pm: 3 },
-    { nome: "Jogador 3", vida: 90, sanidade: 60, dinheiro: 180, pm: 4 }
-  ];
+  /**
+   * Configura uma lista dinâmica:
+   * inputId: ID do campo de entrada.
+   * addBtnId: ID do botão que adiciona o item.
+   * listUlId: ID da <ul> que mostrará os itens.
+   * hiddenFieldId: ID do campo hidden que guardará o valor final.
+   */
+  function setupDynamicList(inputId, addBtnId, listUlId, hiddenFieldId) {
+    const input = document.getElementById(inputId);
+    const addBtn = document.getElementById(addBtnId);
+    const ul = document.getElementById(listUlId);
+    const hiddenField = document.getElementById(hiddenFieldId);
+    let items = [];
 
-  function carregarRegistros() {
-    registrosContainer.innerHTML = "";
-    registros.forEach((registro) => {
-      const div = document.createElement("div");
-      div.classList.add("registro");
-      div.innerHTML = `
-                <strong>${registro.nome}</strong><br>
-                Vida: ${registro.vida}<br>
-                Sanidade: ${registro.sanidade}<br>
-                Dinheiro: ${registro.dinheiro}<br>
-                PM: ${registro.pm}
-            `;
-      registrosContainer.appendChild(div);
+    // Atualiza o campo oculto com os itens separados por vírgula
+    function updateHiddenField() {
+      hiddenField.value = items.join(", ");
+    }
+
+      // Renderiza os itens da lista, com botão para remoção
+    function renderList() {
+      ul.innerHTML = "";
+      items.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "Remover";
+        removeBtn.addEventListener("click", () => {
+          items.splice(index, 1);
+          renderList();
+          updateHiddenField();
+        });
+        li.appendChild(removeBtn);
+        ul.appendChild(li);
+      });
+    }
+
+    addBtn.addEventListener("click", () => {
+      const value = input.value.trim();
+      if (value) {
+        items.push(value);
+        input.value = "";
+        renderList();
+        updateHiddenField();
+      }
     });
   }
 
-  carregarRegistros();
+  // Configura a lista dinâmica para cada campo, se os elementos existirem na página
 
-  addButton.addEventListener("click", () => {
-    window.location.href = "add.html"; // Vai para a página de adicionar registros
-  });
+  if(document.getElementById("input-missoes")){
+    setupDynamicList("input-missoes", "add-missao", "missoes-ul", "missoes-hidden");
+  }
+
+  if(document.getElementById("input-habilidades")){
+    setupDynamicList("input-habilidades", "add-habilidade", "habilidades-ul", "habilidades-hidden");
+  }
+
+  if(document.getElementById("input-rituais")){
+    setupDynamicList("input-rituais", "add-ritual", "rituais-ul", "rituais-hidden");
+  }
 });

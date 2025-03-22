@@ -28,6 +28,7 @@
     const container = document.getElementById("registros-container");
     container.innerHTML = "";
     let lista = registrosFiltrados || registros;
+    // Ordena mantendo os registros com "favorito" no topo, se aplicável
     lista = lista.slice().sort((a, b) => (b.favorito ? 1 : 0) - (a.favorito ? 1 : 0));
 
     if (lista.length === 0) {
@@ -49,25 +50,28 @@
           </div>
           <div class="registro-body">
             <div class="registro-chip">Nome: ${registro.nome}</div>
-            <div class="registro-chip">Vida: ${registro.vidaAtual} / ${registro.vidaMax}</div>
-            <div class="registro-chip">Sanidade: ${registro.sanidadeAtual} / ${registro.sanidadeMax || registro.sanidade}</div>
-            <div class="registro-chip">Esforço: ${registro.esforcoAtual} / ${registro.esforcoMax}</div>
+            <div class="registro-chip">Vida: ${registro.vidaMax}</div>
+            <div class="registro-chip">Sanidade: ${registro.sanidadeMax}</div>
+            <div class="registro-chip">Esforço: ${registro.esforcoMax}</div>
             <div class="registro-chip">Dinheiro: ${registro.dinheiro || '---'}</div>
             <div class="registro-chip">PM: ${registro.pm}</div>
             <div class="registro-chip">Data: ${registro.data}</div>
           </div>
         `;
 
+      // Ao clicar no registro, abre a DetailPage
       div.addEventListener("click", () => {
         window.location.href = `DetailPage.html?id=${index}`;
       });
 
+      // Botão de edição abre a EditPage em uma nova janela
       const gear = div.querySelector(".registro-gear");
       gear.addEventListener("click", (event) => {
         event.stopPropagation();
         window.open(`EditPage.html?id=${index}`, "Editar Registro", "width=600,height=600");
       });
 
+      // Alterna o status de favorito
       const star = div.querySelector(".registro-star");
       star.addEventListener("click", (event) => {
         event.stopPropagation();
@@ -93,7 +97,7 @@
       window.open("RegisterPage.html", "Cadastro", "width=600,height=600");
     });
 
-    // Função de pesquisa: filtra registros conforme o input
+    // Função de pesquisa: filtra os registros conforme o nome digitado
     const searchInput = document.getElementById("search-input");
     searchInput.addEventListener("input", function () {
       const filtro = this.value.toLowerCase();
