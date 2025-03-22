@@ -44,7 +44,12 @@
     <label for="data">Data:</label>
     <input type="date" id="data" required>
   </div>
-  <button id="save-button">Salvar</button>
+
+  <!-- Container para os botões, que serão exibidos um à esquerda e outro à direita -->
+  <div class="button-container">
+    <button id="save-button">Salvar</button>
+    <button id="delete-button">Excluir</button>
+  </div>
 </div>
 
 <script>
@@ -117,6 +122,29 @@
       window.opener.location.reload();
     }
 
+    window.close();
+  });
+
+  document.getElementById("delete-button").addEventListener("click", () => {
+    if (!confirm("Tem certeza que deseja excluir este registro?")) {
+      return;
+    }
+    const id = getIdFromUrl();
+    let registros = JSON.parse(localStorage.getItem("registros")) || [];
+
+    if (id === null || !registros[id]) {
+      alert("Registro não encontrado!");
+      return;
+    }
+
+    registros.splice(id, 1);
+    localStorage.setItem("registros", JSON.stringify(registros));
+
+    if (window.opener && !window.opener.closed) {
+      window.opener.location.reload();
+    }
+
+    alert("Registro excluído com sucesso!");
     window.close();
   });
 </script>
