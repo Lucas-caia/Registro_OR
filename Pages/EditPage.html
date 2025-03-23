@@ -4,10 +4,35 @@
   <meta charset="UTF-8">
   <title>Editar Registro</title>
   <link rel="stylesheet" href="/css/edit.css">
+  <style>
+    .skill-field {
+      margin-bottom: 5px;
+    }
+    .skill-field label {
+      display: inline-block;
+      width: 150px;
+    }
+    .form-field {
+      margin-bottom: 15px;
+    }
+    .form-field label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .form-field textarea,
+    .form-field input,
+    .form-field select {
+      width: 100%;
+      max-width: 400px;
+      padding: 5px;
+    }
+  </style>
 </head>
 <body>
 <h2>Editar Registro</h2>
 <div class="container">
+  <!-- Campos principais -->
   <div class="form-field">
     <label for="nome">Nome:</label>
     <input type="text" id="nome" required>
@@ -49,10 +74,54 @@
   <div class="form-field">
     <label for="origem">Origem:</label>
     <select id="origem" required>
-      <option value="">Selecione</option>
       <option value="Acadêmico">Acadêmico</option>
+      <option value="Agente de Saúde">Agente de Saúde</option>
+      <option value="Amnésico">Amnésico</option>
+      <option value="Amigo dos Animais">Amigo dos Animais</option>
+      <option value="Artista">Artista</option>
+      <option value="Astronauta">Astronauta</option>
+      <option value="Atleta">Atleta</option>
+      <option value="Chef">Chef</option>
+      <option value="Chef do Outro Lado">Chef do Outro Lado</option>
+      <option value="Cientista Forense">Cientista Forense</option>
+      <option value="Colegial">Colegial</option>
+      <option value="Cosplayer">Cosplayer</option>
+      <option value="Criminoso">Criminoso</option>
+      <option value="Cultista Arrependido">Cultista Arrependido</option>
+      <option value="Desgarrado">Desgarrado</option>
+      <option value="Dublê">Dublê</option>
+      <option value="Engenheiro">Engenheiro</option>
+      <option value="Escritor">Escritor</option>
+      <option value="Executivo">Executivo</option>
+      <option value="Gaudério Abutre">Gaudério Abutre</option>
+      <option value="Ginasta">Ginasta</option>
+      <option value="Investigador">Investigador</option>
+      <option value="Jornalista">Jornalista</option>
+      <option value="Jovem Místico">Jovem Místico</option>
+      <option value="Legista do Turno da Noite">Legista do Turno da Noite</option>
       <option value="Lutador">Lutador</option>
-      <option value="Vitima">Vitima</option>
+      <option value="Magnata">Magnata</option>
+      <option value="Mateiro">Mateiro</option>
+      <option value="Mercenário">Mercenário</option>
+      <option value="Militar">Militar</option>
+      <option value="Mergulhador">Mergulhador</option>
+      <option value="Motorista">Motorista</option>
+      <option value="Nerd Entusiasta">Nerd Entusiasta</option>
+      <option value="Operário">Operário</option>
+      <option value="Policial">Policial</option>
+      <option value="Professor">Professor</option>
+      <option value="Profetizado">Profetizado</option>
+      <option value="Psicólogo">Psicólogo</option>
+      <option value="Repórter Investigativo">Repórter Investigativo</option>
+      <option value="Religioso">Religioso</option>
+      <option value="Revoltado">Revoltado</option>
+      <option value="Servidor Público">Servidor Público</option>
+      <option value="Teórico da Conspiração">Teórico da Conspiração</option>
+      <option value="T.I.">T.I.</option>
+      <option value="Trabalhador Rural">Trabalhador Rural</option>
+      <option value="Trambiqueiro">Trambiqueiro</option>
+      <option value="Universitário">Universitário</option>
+      <option value="Vítima">Vítima</option>
     </select>
   </div>
   <div class="form-field">
@@ -71,12 +140,32 @@
     <label for="rituais">Rituais:</label>
     <textarea id="rituais" placeholder="Digite os rituais separados por vírgula"></textarea>
   </div>
+
+  <!-- Novos campos adicionados -->
   <div class="form-field">
-    <label for="data">Data (Última modificação):</label>
-    <input type="date" id="data" required>
+    <label for="comentarios">Comentários Adicionais:</label>
+    <textarea id="comentarios" placeholder="Digite os comentários adicionais"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="condecoracoes">Condecorações:</label>
+    <textarea id="condecoracoes" placeholder="Digite as condecorações"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="lojinha">Lojinha:</label>
+    <textarea id="lojinha" placeholder="Digite os itens da lojinha"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="itensEspeciais">Itens Especiais:</label>
+    <textarea id="itensEspeciais" placeholder="Digite os itens especiais"></textarea>
   </div>
 
-  <!-- Container para os botões -->
+  <!-- Seção de perícias (dinamicamente gerada) -->
+  <div class="form-field">
+    <label>Perícias:</label>
+    <div id="skills-container"></div>
+  </div>
+
+  <!-- Botões -->
   <div class="button-container">
     <button id="save-button">Salvar</button>
     <button id="delete-button">Excluir</button>
@@ -84,21 +173,55 @@
 </div>
 
 <script>
+  // Função para obter o ID da URL
   function getIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get("id");
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  // Array com o nome de todas as perícias
+  const skills = [
+    "Acrobacia", "Atletismo", "Investigação", "Adestramento", "Artes", "Ciências", "Crime",
+    "Diplomacia", "Enganação", "Fortitude", "Furtividade", "Iniciativa", "Intimidação", "Intuição",
+    "Luta", "Medicina", "Ocultismo", "Percepção", "Pilotagem", "Pontaria", "Profissão", "Reflexos",
+    "Religião", "Sobrevivencia", "Tatica", "Tecnologia", "Vontade"
+  ];
+
+  // Níveis possíveis para cada perícia
+  const levels = ["Nenhum", "Treinado", "Veterano", "Expert"];
+
+  // Função para gerar dinamicamente os campos de perícias (selects para cada perícia)
+  function generateSkillInputs() {
+    const container = document.getElementById("skills-container");
+    container.innerHTML = "";
+    skills.forEach(skill => {
+      const div = document.createElement("div");
+      div.className = "skill-field";
+      const label = document.createElement("label");
+      label.textContent = skill + ": ";
+      const select = document.createElement("select");
+      select.name = "skill_" + skill;
+      levels.forEach(level => {
+        const option = document.createElement("option");
+        option.value = level;
+        option.textContent = level;
+        select.appendChild(option);
+      });
+      div.appendChild(label);
+      div.appendChild(select);
+      container.appendChild(div);
+    });
+  }
+
+  // Função para carregar os dados do registro, incluindo os níveis das perícias e os novos campos
+  function loadRecord() {
     const id = getIdFromUrl();
     let registros = JSON.parse(localStorage.getItem("registros")) || [];
-
     if (id === null || !registros[id]) {
       alert("Registro não encontrado!");
       window.close();
       return;
     }
-
     const registro = registros[id];
     document.getElementById("nome").value = registro.nome;
     document.getElementById("vidaMax").value = registro.vidaMax;
@@ -113,18 +236,39 @@
     document.getElementById("missoes").value = registro.missoes ? registro.missoes.join(", ") : "";
     document.getElementById("habilidades").value = registro.habilidades ? registro.habilidades.join(", ") : "";
     document.getElementById("rituais").value = registro.rituais ? registro.rituais.join(", ") : "";
-    document.getElementById("data").value = registro.data;
+    document.getElementById("comentarios").value = registro.comentarios || "";
+    document.getElementById("condecoracoes").value = registro.condecoracoes ? registro.condecoracoes.join(", ") : "";
+    document.getElementById("lojinha").value = registro.lojinha || "";
+    document.getElementById("itensEspeciais").value = registro.itensEspeciais || "";
+
+    // Se o registro tiver um objeto "skills", percorre cada perícia e define o nível
+    if (registro.skills) {
+      skills.forEach(skill => {
+        const select = document.querySelector(`select[name="skill_${skill}"]`);
+        if (select && registro.skills[skill]) {
+          select.value = registro.skills[skill];
+        }
+      });
+    }
+  }
+
+  // Inicializa a página: gera os campos de perícias e carrega os dados do registro
+  document.addEventListener("DOMContentLoaded", () => {
+    generateSkillInputs();
+    loadRecord();
   });
 
+  // Evento para salvar os dados
   document.getElementById("save-button").addEventListener("click", () => {
     const id = getIdFromUrl();
+    const dataAtual = new Date().toISOString();
     let registros = JSON.parse(localStorage.getItem("registros")) || [];
-
     if (id === null || !registros[id]) {
       alert("Registro não encontrado!");
       return;
     }
 
+    // Obter valores dos campos gerais
     const nome = document.getElementById("nome").value.trim();
     const vidaMax = parseInt(document.getElementById("vidaMax").value) || 1;
     const sanidadeMax = parseInt(document.getElementById("sanidadeMax").value) || 1;
@@ -138,9 +282,21 @@
     const missoes = document.getElementById("missoes").value.split(",").map(item => item.trim()).filter(item => item);
     const habilidades = document.getElementById("habilidades").value.split(",").map(item => item.trim()).filter(item => item);
     const rituais = document.getElementById("rituais").value.split(",").map(item => item.trim()).filter(item => item);
-    const data = document.getElementById("data").value;
+    const comentarios = document.getElementById("comentarios").value.trim();
+    const condecoracoes = document.getElementById("condecoracoes").value.split(",").map(item => item.trim()).filter(item => item);
+    const lojinha = document.getElementById("lojinha").value.trim();
+    const itensEspeciais = document.getElementById("itensEspeciais").value.trim();
 
-    if (!nome || !data || !classe || !trilha || !origem) {
+    // Coleta os níveis selecionados para cada perícia
+    let recordSkills = {};
+    skills.forEach(skill => {
+      const select = document.querySelector(`select[name="skill_${skill}"]`);
+      if (select) {
+        recordSkills[skill] = select.value; // Valor pode ser "Nenhum", "Treinado", "Veterano" ou "Expert"
+      }
+    });
+
+    if (!nome || !classe || !trilha || !origem) {
       alert("Por favor, preencha todos os campos obrigatórios!");
       return;
     }
@@ -159,37 +315,37 @@
       missoes,
       habilidades,
       rituais,
-      data
+      comentarios,
+      condecoracoes,
+      lojinha,
+      itensEspeciais,
+      skills: recordSkills,
+      data: dataAtual  // data/hora da modificação
     };
 
     localStorage.setItem("registros", JSON.stringify(registros));
-
     if (window.opener && !window.opener.closed) {
       window.opener.location.reload();
     }
-
     window.close();
   });
 
+  // Evento para exclusão
   document.getElementById("delete-button").addEventListener("click", () => {
     if (!confirm("Tem certeza que deseja excluir este registro?")) {
       return;
     }
     const id = getIdFromUrl();
     let registros = JSON.parse(localStorage.getItem("registros")) || [];
-
     if (id === null || !registros[id]) {
       alert("Registro não encontrado!");
       return;
     }
-
     registros.splice(id, 1);
     localStorage.setItem("registros", JSON.stringify(registros));
-
     if (window.opener && !window.opener.closed) {
       window.opener.location.reload();
     }
-
     alert("Registro excluído com sucesso!");
     window.close();
   });

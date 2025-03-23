@@ -53,8 +53,53 @@
     <select id="origem" class="register-input" required>
       <option value="">Selecione</option>
       <option value="Acadêmico">Acadêmico</option>
+      <option value="Agente de Saúde">Agente de Saúde</option>
+      <option value="Amnésico">Amnésico</option>
+      <option value="Amigo dos Animais">Amigo dos Animais</option>
+      <option value="Artista">Artista</option>
+      <option value="Astronauta">Astronauta</option>
+      <option value="Atleta">Atleta</option>
+      <option value="Chef">Chef</option>
+      <option value="Chef do Outro Lado">Chef do Outro Lado</option>
+      <option value="Cientista Forense">Cientista Forense</option>
+      <option value="Colegial">Colegial</option>
+      <option value="Cosplayer">Cosplayer</option>
+      <option value="Criminoso">Criminoso</option>
+      <option value="Cultista Arrependido">Cultista Arrependido</option>
+      <option value="Desgarrado">Desgarrado</option>
+      <option value="Dublê">Dublê</option>
+      <option value="Engenheiro">Engenheiro</option>
+      <option value="Escritor">Escritor</option>
+      <option value="Executivo">Executivo</option>
+      <option value="Gaudério Abutre">Gaudério Abutre</option>
+      <option value="Ginasta">Ginasta</option>
+      <option value="Investigador">Investigador</option>
+      <option value="Jornalista">Jornalista</option>
+      <option value="Jovem Místico">Jovem Místico</option>
+      <option value="Legista do Turno da Noite">Legista do Turno da Noite</option>
       <option value="Lutador">Lutador</option>
-      <option value="Vitima">Vitima</option>
+      <option value="Magnata">Magnata</option>
+      <option value="Mateiro">Mateiro</option>
+      <option value="Mercenário">Mercenário</option>
+      <option value="Militar">Militar</option>
+      <option value="Mergulhador">Mergulhador</option>
+      <option value="Motorista">Motorista</option>
+      <option value="Nerd Entusiasta">Nerd Entusiasta</option>
+      <option value="Operário">Operário</option>
+      <option value="Policial">Policial</option>
+      <option value="Professor">Professor</option>
+      <option value="Profetizado">Profetizado</option>
+      <option value="Psicólogo">Psicólogo</option>
+      <option value="Repórter Investigativo">Repórter Investigativo</option>
+      <option value="Religioso">Religioso</option>
+      <option value="Revoltado">Revoltado</option>
+      <option value="Servidor Público">Servidor Público</option>
+      <option value="Teórico da Conspiração">Teórico da Conspiração</option>
+      <option value="T.I.">T.I.</option>
+      <option value="Trabalhador Rural">Trabalhador Rural</option>
+      <option value="Trambiqueiro">Trambiqueiro</option>
+      <option value="Universitário">Universitário</option>
+      <option value="Vítima">Vítima</option>
     </select>
   </div>
   <div class="form-field">
@@ -72,12 +117,6 @@
   <div class="form-field">
     <label for="rituais">Rituais:</label>
     <textarea id="rituais" class="register-input" placeholder="Digite os rituais separados por vírgula"></textarea>
-  </div>
-
-  <!-- O campo data aqui registra a data de criação; posteriormente, no EditPage, esse campo será atualizado -->
-  <div class="form-field">
-    <label for="data">Data:</label>
-    <input type="date" id="data" class="register-input" required>
   </div>
   <button id="save-button" class="register-button">Salvar</button>
 </div>
@@ -97,9 +136,8 @@
     const missoes = document.getElementById("missoes").value.split(",").map(item => item.trim()).filter(item => item);
     const habilidades = document.getElementById("habilidades").value.split(",").map(item => item.trim()).filter(item => item);
     const rituais = document.getElementById("rituais").value.split(",").map(item => item.trim()).filter(item => item);
-    const data = document.getElementById("data").value;
 
-    if (!nome || !data || !classe || !trilha || !origem) {
+    if (!nome || !classe || !trilha || !origem) {
       alert("Por favor, preencha todos os campos obrigatórios antes de salvar!");
       return;
     }
@@ -118,7 +156,6 @@
       missoes,
       habilidades,
       rituais,
-      data
     };
 
     let registros = JSON.parse(localStorage.getItem("registros")) || [];

@@ -55,7 +55,7 @@
             <div class="registro-chip">Esforço: ${registro.esforcoMax}</div>
             <div class="registro-chip">Dinheiro: ${registro.dinheiro || '---'}</div>
             <div class="registro-chip">PM: ${registro.pm}</div>
-            <div class="registro-chip">Data: ${registro.data}</div>
+            <div class="registro-chip">Data: ${new Date(registro.data).toLocaleString()}</div>
           </div>
         `;
 
