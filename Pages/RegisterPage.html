@@ -4,11 +4,30 @@
   <meta charset="UTF-8">
   <title>Adicionar Registro</title>
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .form-field {
+      margin-bottom: 15px;
+    }
+    .form-field label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      max-width: 400px;
+      padding: 5px;
+    }
+  </style>
 </head>
 <body>
 <header>Adicionar Registro</header>
 <div class="register-container">
   <div class="register-title">Novo Personagem</div>
+
+  <!-- Campos principais -->
   <div class="form-field">
     <label for="nome">Nome:</label>
     <input type="text" id="nome" class="register-input" required>
@@ -52,6 +71,7 @@
     <label for="origem">Origem:</label>
     <select id="origem" class="register-input" required>
       <option value="">Selecione</option>
+      <!-- Coloque todas as opções necessárias -->
       <option value="Acadêmico">Acadêmico</option>
       <option value="Agente de Saúde">Agente de Saúde</option>
       <option value="Amnésico">Amnésico</option>
@@ -123,6 +143,7 @@
 
 <script>
   document.getElementById("save-button").addEventListener("click", () => {
+    // Coleta os valores dos campos
     const nome = document.getElementById("nome").value.trim();
     const vidaMax = parseInt(document.getElementById("vidaMax").value) || 1;
     const sanidadeMax = parseInt(document.getElementById("sanidadeMax").value) || 1;
@@ -138,7 +159,7 @@
     const rituais = document.getElementById("rituais").value.split(",").map(item => item.trim()).filter(item => item);
 
     if (!nome || !classe || !trilha || !origem) {
-      alert("Por favor, preencha todos os campos obrigatórios antes de salvar!");
+      alert("Por favor, preencha todos os campos obrigatórios!");
       return;
     }
 
@@ -156,17 +177,33 @@
       missoes,
       habilidades,
       rituais,
+      data: new Date().toISOString() // Armazena data/hora atual
     };
 
-    let registros = JSON.parse(localStorage.getItem("registros")) || [];
-    registros.push(novoRegistro);
-    localStorage.setItem("registros", JSON.stringify(registros));
-
-    if (window.opener && typeof window.opener.addRegistro === "function") {
-      window.opener.addRegistro(novoRegistro);
-    }
-
-    window.close();
+    // Envia a requisição POST para a API
+    fetch('http://localhost:3000/api/registros', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(novoRegistro)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Erro ao salvar registro.");
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert("Registro salvo com sucesso!");
+        // Opcional: atualize a PrincipalPage se ela estiver aberta
+        if (window.opener) {
+          window.opener.location.reload();
+        }
+        window.close();
+      })
+      .catch(error => {
+        console.error("Erro:", error);
+        alert("Falha ao salvar registro.");
+      });
   });
 </script>
 </body>

@@ -22,16 +22,19 @@
 </div>
 
 <script>
+  // Função para obter o parâmetro "id" da URL
   function getIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get("id");
   }
-  // Função para renderizar listas de itens
+
+  // Função para renderizar uma lista de itens
   function renderList(field) {
     if (!field || field.length === 0) return "<em>Nenhum item cadastrado.</em>";
     return `<ul>${field.map(item => `<li>${item}</li>`).join("")}</ul>`;
   }
 
+  // Função para renderizar as perícias (skills) a partir de um objeto Map (ou objeto simples)
   function renderSkills(skills) {
     let html = "<ul>";
     let count = 0;
@@ -45,119 +48,130 @@
     return count === 0 ? "<em>Nenhuma perícia definida.</em>" : html;
   }
 
+  // Função para carregar os detalhes do registro via API
   function carregarDetalhes() {
-    const registros = JSON.parse(localStorage.getItem("registros")) || [];
     const id = getIdFromUrl();
-    const detailContent = document.getElementById("detail-content");
-    if (id !== null && registros[id]) {
-      const registro = registros[id];
-      detailContent.innerHTML = `
-        <div class="detail-field">
-          <span class="detail-label">Nome:</span>
-          <span class="detail-value">${registro.nome}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Vida Máxima:</span>
-          <span class="detail-value">${registro.vidaMax}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Sanidade Máxima:</span>
-          <span class="detail-value">${registro.sanidadeMax}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Esforço Máximo:</span>
-          <span class="detail-value">${registro.esforcoMax}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Pontos de Missão (PM):</span>
-          <span class="detail-value">${registro.pm}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Dinheiro:</span>
-          <span class="detail-value">${registro.dinheiro}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Classe:</span>
-          <span class="detail-value">${registro.classe}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Trilha:</span>
-          <span class="detail-value">${registro.trilha}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Origem:</span>
-          <span class="detail-value">${registro.origem}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Idade:</span>
-          <span class="detail-value">${registro.idade}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Registro de Missões:</span>
-          <span class="detail-value">${
-        Array.isArray(registro.missoes)
-          ? renderList(registro.missoes)
-          : renderList(registro.missoes ? registro.missoes.split(",").map(item => item.trim()).filter(item => item) : [])
-      }</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Habilidades e Poderes:</span>
-          <span class="detail-value">${
-        Array.isArray(registro.habilidades)
-          ? renderList(registro.habilidades)
-          : renderList(registro.habilidades ? registro.habilidades.split(",").map(item => item.trim()).filter(item => item) : [])
-      }</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Rituais:</span>
-          <span class="detail-value">${
-        Array.isArray(registro.rituais)
-          ? renderList(registro.rituais)
-          : renderList(registro.rituais ? registro.rituais.split(",").map(item => item.trim()).filter(item => item) : [])
-      }</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Comentários Adicionais:</span>
-          <span class="detail-value">${registro.comentarios || "<em>Nenhum comentário cadastrado.</em>"}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Condecorações:</span>
-          <span class="detail-value">${
-        Array.isArray(registro.condecoracoes)
-          ? renderList(registro.condecoracoes)
-          : renderList(registro.condecoracoes ? registro.condecoracoes.split(",").map(item => item.trim()).filter(item => item) : [])
-      }</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Lojinha:</span>
-          <span class="detail-value">${
-        Array.isArray(registro.lojinha)
-          ? renderList(registro.lojinha)
-          : renderList(registro.lojinha ? registro.lojinha.split(",").map(item => item.trim()).filter(item => item) : [])
-      }</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Itens Especiais:</span>
-          <span class="detail-value">${
-        Array.isArray(registro.itensEspeciais)
-          ? renderList(registro.itensEspeciais)
-          : renderList(registro.itensEspeciais ? registro.itensEspeciais.split(",").map(item => item.trim()).filter(item => item) : [])
-      }</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Perícias:</span>
-          <span class="detail-value">${
-        registro.skills ? renderSkills(registro.skills) : "<em>Nenhuma perícia cadastrada.</em>"
-      }</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Data (Última modificação):</span>
-          <span class="detail-value">${new Date(registro.data).toLocaleString()}</span>
-        </div>
-      `;
-    } else {
-      detailContent.innerHTML = `<p style="color: #ff4655; font-size: 18px;">Registro não encontrado.</p>`;
+    if (!id) {
+      document.getElementById("detail-content").innerHTML = "<p>Registro não encontrado.</p>";
+      return;
     }
+
+    fetch(`http://localhost:3000/api/registros/${id}`)
+      .then(response => {
+        if (!response.ok) throw new Error("Registro não encontrado");
+        return response.json();
+      })
+      .then(registro => {
+        const detailContent = document.getElementById("detail-content");
+        detailContent.innerHTML = `
+          <div class="detail-field">
+            <span class="detail-label">Nome:</span>
+            <span class="detail-value">${registro.nome}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Vida Máxima:</span>
+            <span class="detail-value">${registro.vidaMax}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Sanidade Máxima:</span>
+            <span class="detail-value">${registro.sanidadeMax}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Esforço Máximo:</span>
+            <span class="detail-value">${registro.esforcoMax}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Pontos de Missão (PM):</span>
+            <span class="detail-value">${registro.pm}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Dinheiro:</span>
+            <span class="detail-value">${registro.dinheiro}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Classe:</span>
+            <span class="detail-value">${registro.classe}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Trilha:</span>
+            <span class="detail-value">${registro.trilha}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Origem:</span>
+            <span class="detail-value">${registro.origem}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Idade:</span>
+            <span class="detail-value">${registro.idade}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Registro de Missões:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.missoes)
+            ? renderList(registro.missoes)
+            : renderList(registro.missoes ? registro.missoes.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Habilidades e Poderes:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.habilidades)
+            ? renderList(registro.habilidades)
+            : renderList(registro.habilidades ? registro.habilidades.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Rituais:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.rituais)
+            ? renderList(registro.rituais)
+            : renderList(registro.rituais ? registro.rituais.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Comentários Adicionais:</span>
+            <span class="detail-value">${registro.comentarios || "<em>Nenhum comentário cadastrado.</em>"}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Condecorações:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.condecoracoes)
+            ? renderList(registro.condecoracoes)
+            : renderList(registro.condecoracoes ? registro.condecoracoes.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Lojinha:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.lojinha)
+            ? renderList(registro.lojinha)
+            : renderList(registro.lojinha ? registro.lojinha.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Itens Especiais:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.itensEspeciais)
+            ? renderList(registro.itensEspeciais)
+            : renderList(registro.itensEspeciais ? registro.itensEspeciais.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Perícias:</span>
+            <span class="detail-value">${
+          registro.skills ? renderSkills(registro.skills) : "<em>Nenhuma perícia cadastrada.</em>"
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Data (Última modificação):</span>
+            <span class="detail-value">${new Date(registro.data).toLocaleString()}</span>
+          </div>
+        `;
+      })
+      .catch(error => {
+        console.error("Erro ao carregar registro:", error);
+        document.getElementById("detail-content").innerHTML = "<p>Erro ao carregar registro.</p>";
+      });
   }
 
   function generatePDF() {

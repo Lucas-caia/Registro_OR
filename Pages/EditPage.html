@@ -20,9 +20,9 @@
       font-weight: bold;
       margin-bottom: 5px;
     }
-    .form-field textarea,
     .form-field input,
-    .form-field select {
+    .form-field select,
+    .form-field textarea {
       width: 100%;
       max-width: 400px;
       padding: 5px;
@@ -57,6 +57,7 @@
     <label for="dinheiro">Dinheiro:</label>
     <input type="number" id="dinheiro" min="0" required>
   </div>
+
   <!-- Novos campos -->
   <div class="form-field">
     <label for="classe">Classe:</label>
@@ -141,22 +142,22 @@
     <textarea id="rituais" placeholder="Digite os rituais separados por vírgula"></textarea>
   </div>
 
-  <!-- Novos campos adicionados -->
+  <!-- Novos campos -->
   <div class="form-field">
     <label for="comentarios">Comentários Adicionais:</label>
     <textarea id="comentarios" placeholder="Digite os comentários adicionais"></textarea>
   </div>
   <div class="form-field">
     <label for="condecoracoes">Condecorações:</label>
-    <textarea id="condecoracoes" placeholder="Digite as condecorações"></textarea>
+    <textarea id="condecoracoes" placeholder="Digite as condecorações separadas por vírgula"></textarea>
   </div>
   <div class="form-field">
     <label for="lojinha">Lojinha:</label>
-    <textarea id="lojinha" placeholder="Digite os itens da lojinha"></textarea>
+    <textarea id="lojinha" placeholder="Digite os itens da lojinha separados por vírgula"></textarea>
   </div>
   <div class="form-field">
     <label for="itensEspeciais">Itens Especiais:</label>
-    <textarea id="itensEspeciais" placeholder="Digite os itens especiais"></textarea>
+    <textarea id="itensEspeciais" placeholder="Digite os itens especiais separados por vírgula"></textarea>
   </div>
 
   <!-- Seção de perícias (dinamicamente gerada) -->
@@ -173,13 +174,11 @@
 </div>
 
 <script>
-  // Função para obter o ID da URL
   function getIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get("id");
   }
 
-  // Array com o nome de todas as perícias
   const skills = [
     "Acrobacia", "Atletismo", "Investigação", "Adestramento", "Artes", "Ciências", "Crime",
     "Diplomacia", "Enganação", "Fortitude", "Furtividade", "Iniciativa", "Intimidação", "Intuição",
@@ -187,10 +186,8 @@
     "Religião", "Sobrevivencia", "Tatica", "Tecnologia", "Vontade"
   ];
 
-  // Níveis possíveis para cada perícia
   const levels = ["Nenhum", "Treinado", "Veterano", "Expert"];
 
-  // Função para gerar dinamicamente os campos de perícias (selects para cada perícia)
   function generateSkillInputs() {
     const container = document.getElementById("skills-container");
     container.innerHTML = "";
@@ -213,62 +210,65 @@
     });
   }
 
-  // Função para carregar os dados do registro, incluindo os níveis das perícias e os novos campos
   function loadRecord() {
     const id = getIdFromUrl();
-    let registros = JSON.parse(localStorage.getItem("registros")) || [];
-    if (id === null || !registros[id]) {
+    if (!id) {
       alert("Registro não encontrado!");
       window.close();
       return;
     }
-    const registro = registros[id];
-    document.getElementById("nome").value = registro.nome;
-    document.getElementById("vidaMax").value = registro.vidaMax;
-    document.getElementById("sanidadeMax").value = registro.sanidadeMax;
-    document.getElementById("esforcoMax").value = registro.esforcoMax;
-    document.getElementById("pm").value = registro.pm;
-    document.getElementById("dinheiro").value = registro.dinheiro;
-    document.getElementById("classe").value = registro.classe || "";
-    document.getElementById("trilha").value = registro.trilha || "";
-    document.getElementById("origem").value = registro.origem || "";
-    document.getElementById("idade").value = registro.idade || "";
-    document.getElementById("missoes").value = registro.missoes ? registro.missoes.join(", ") : "";
-    document.getElementById("habilidades").value = registro.habilidades ? registro.habilidades.join(", ") : "";
-    document.getElementById("rituais").value = registro.rituais ? registro.rituais.join(", ") : "";
-    document.getElementById("comentarios").value = registro.comentarios || "";
-    document.getElementById("condecoracoes").value = registro.condecoracoes ? registro.condecoracoes.join(", ") : "";
-    document.getElementById("lojinha").value = registro.lojinha || "";
-    document.getElementById("itensEspeciais").value = registro.itensEspeciais || "";
+    fetch(`http://localhost:3000/api/registros/${id}`)
+      .then(response => {
+        if (!response.ok) throw new Error("Registro não encontrado");
+        return response.json();
+      })
+      .then(registro => {
+        document.getElementById("nome").value = registro.nome;
+        document.getElementById("vidaMax").value = registro.vidaMax;
+        document.getElementById("sanidadeMax").value = registro.sanidadeMax;
+        document.getElementById("esforcoMax").value = registro.esforcoMax;
+        document.getElementById("pm").value = registro.pm;
+        document.getElementById("dinheiro").value = registro.dinheiro;
+        document.getElementById("classe").value = registro.classe || "";
+        document.getElementById("trilha").value = registro.trilha || "";
+        document.getElementById("origem").value = registro.origem || "";
+        document.getElementById("idade").value = registro.idade || "";
+        document.getElementById("missoes").value = registro.missoes ? registro.missoes.join(", ") : "";
+        document.getElementById("habilidades").value = registro.habilidades ? registro.habilidades.join(", ") : "";
+        document.getElementById("rituais").value = registro.rituais ? registro.rituais.join(", ") : "";
+        document.getElementById("comentarios").value = registro.comentarios || "";
+        document.getElementById("condecoracoes").value = registro.condecoracoes ? registro.condecoracoes.join(", ") : "";
+        document.getElementById("lojinha").value = registro.lojinha ? registro.lojinha.join(", ") : "";
+        document.getElementById("itensEspeciais").value = registro.itensEspeciais || "";
 
-    // Se o registro tiver um objeto "skills", percorre cada perícia e define o nível
-    if (registro.skills) {
-      skills.forEach(skill => {
-        const select = document.querySelector(`select[name="skill_${skill}"]`);
-        if (select && registro.skills[skill]) {
-          select.value = registro.skills[skill];
+        if (registro.skills) {
+          skills.forEach(skill => {
+            const select = document.querySelector(`select[name="skill_${skill}"]`);
+            if (select && registro.skills[skill]) {
+              select.value = registro.skills[skill];
+            }
+          });
         }
+      })
+      .catch(error => {
+        console.error("Erro ao carregar registro:", error);
+        alert("Erro ao carregar registro.");
       });
-    }
   }
 
-  // Inicializa a página: gera os campos de perícias e carrega os dados do registro
   document.addEventListener("DOMContentLoaded", () => {
     generateSkillInputs();
     loadRecord();
   });
 
-  // Evento para salvar os dados
+  // Evento para salvar os dados (atualização via PUT)
   document.getElementById("save-button").addEventListener("click", () => {
     const id = getIdFromUrl();
-    const dataAtual = new Date().toISOString();
-    let registros = JSON.parse(localStorage.getItem("registros")) || [];
-    if (id === null || !registros[id]) {
+    if (!id) {
       alert("Registro não encontrado!");
       return;
     }
-
-    // Obter valores dos campos gerais
+    const dataAtual = new Date().toISOString();
     const nome = document.getElementById("nome").value.trim();
     const vidaMax = parseInt(document.getElementById("vidaMax").value) || 1;
     const sanidadeMax = parseInt(document.getElementById("sanidadeMax").value) || 1;
@@ -284,24 +284,23 @@
     const rituais = document.getElementById("rituais").value.split(",").map(item => item.trim()).filter(item => item);
     const comentarios = document.getElementById("comentarios").value.trim();
     const condecoracoes = document.getElementById("condecoracoes").value.split(",").map(item => item.trim()).filter(item => item);
-    const lojinha = document.getElementById("lojinha").value.trim();
+    const lojinha = document.getElementById("lojinha").value.split(",").map(item => item.trim()).filter(item => item);
     const itensEspeciais = document.getElementById("itensEspeciais").value.trim();
 
-    // Coleta os níveis selecionados para cada perícia
-    let recordSkills = {};
-    skills.forEach(skill => {
-      const select = document.querySelector(`select[name="skill_${skill}"]`);
-      if (select) {
-        recordSkills[skill] = select.value; // Valor pode ser "Nenhum", "Treinado", "Veterano" ou "Expert"
-      }
-    });
-
-    if (!nome || !classe || !trilha || !origem) {
+    if (!nome || !classe || !origem) {
       alert("Por favor, preencha todos os campos obrigatórios!");
       return;
     }
 
-    registros[id] = {
+    let recordSkills = {};
+    skills.forEach(skill => {
+      const select = document.querySelector(`select[name="skill_${skill}"]`);
+      if (select) {
+        recordSkills[skill] = select.value;
+      }
+    });
+
+    const registroAtualizado = {
       nome,
       vidaMax,
       sanidadeMax,
@@ -320,34 +319,56 @@
       lojinha,
       itensEspeciais,
       skills: recordSkills,
-      data: dataAtual  // data/hora da modificação
+      data: dataAtual
     };
 
-    localStorage.setItem("registros", JSON.stringify(registros));
-    if (window.opener && !window.opener.closed) {
-      window.opener.location.reload();
-    }
-    window.close();
+    fetch(`http://localhost:3000/api/registros/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(registroAtualizado)
+    })
+      .then(response => {
+        if (!response.ok) throw new Error("Erro ao atualizar registro.");
+        return response.json();
+      })
+      .then(data => {
+        alert("Registro atualizado com sucesso!");
+        if (window.opener) {
+          window.opener.location.reload();
+        }
+        window.close();
+      })
+      .catch(error => {
+        console.error("Erro:", error);
+        alert("Falha ao atualizar registro.");
+      });
   });
 
-  // Evento para exclusão
   document.getElementById("delete-button").addEventListener("click", () => {
     if (!confirm("Tem certeza que deseja excluir este registro?")) {
       return;
     }
     const id = getIdFromUrl();
-    let registros = JSON.parse(localStorage.getItem("registros")) || [];
-    if (id === null || !registros[id]) {
+    if (!id) {
       alert("Registro não encontrado!");
       return;
     }
-    registros.splice(id, 1);
-    localStorage.setItem("registros", JSON.stringify(registros));
-    if (window.opener && !window.opener.closed) {
-      window.opener.location.reload();
-    }
-    alert("Registro excluído com sucesso!");
-    window.close();
+    fetch(`http://localhost:3000/api/registros/${id}`, {
+      method: 'DELETE'
+    })
+      .then(response => {
+        if (response.status === 204) {
+          alert("Registro excluído com sucesso!");
+          if (window.opener) window.opener.location.reload();
+          window.close();
+        } else {
+          throw new Error("Erro ao excluir registro.");
+        }
+      })
+      .catch(error => {
+        console.error("Erro:", error);
+        alert("Falha ao excluir registro.");
+      });
   });
 </script>
 </body>
