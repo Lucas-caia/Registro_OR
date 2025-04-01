@@ -4,150 +4,190 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalhes do Registro</title>
-  <!-- Caso use um arquivo CSS externo, ajuste o href -->
-  <!-- <link rel="stylesheet" href="css/style.css"> -->
-  <style>
-    body{
-      font-family: 'IM Fell English', serif;
-      background-color: #0a0a0a;
-      color: #c9b37e;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
-    .detail-container{
-      background-color: #1c1c1c;
-      border: 2px solid #c9b37e;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 0px 15px rgba(201, 179, 126, 0.5);
-      max-width: 90%;
-      width: 500px;
-      text-align: left;
-      position: relative;
-    }
-    .detail-header{
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .detail-header h2 {
-      margin: 0;
-      font-size: 2em;
-      color: #a10f2b;
-      text-shadow: 2px 2px 10px rgba(161, 15, 43, 0.6);
-    }
-    #edit-button {
-      font-size: 1.5em;
-      cursor: pointer;
-      padding: 5px;
-      transition: transform 0.3s ease;
-    }
-    #edit-button:hover {
-      transform: scale(1.1);
-    }
-    .detail-field{
-      font-size: 1.2em;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .detail-label{
-      font-weight: bold;
-      color: #c9b37e;
-    }
-    .detail-value{
-      color: #fff;
-    }
-    .button{
-      margin-top: 20px;
-      background-color: transparent;
-      color: #c9b37e;
-      border: 2px solid #a10f2b;
-      padding: 12px 24px;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      border-radius: 5px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      box-shadow: 0px 0px 15px rgba(161, 15, 43, 0.5);
-      display: block;
-      width: 100%;
-      text-align: center;
-    }
-    .button:hover{
-      background-color: #a10f2b;
-      color: #0a0a0a;
-      transform: scale(1.1);
-      box-shadow: 0px 0px 20px rgba(161, 15, 43, 0.9);
-    }
-  </style>
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Biblioteca html2pdf via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 <div class="detail-container">
   <div class="detail-header">
     <h2>Detalhes do Registro</h2>
-    <span id="edit-button">&#9881;</span>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <span id="edit-button" class="icon-button">&#9881;</span>
+      <img id="download-button" class="icon-button" src="/css/icons/download(1).png" alt="Download PDF">
+    </div>
   </div>
   <div id="detail-content">Carregando...</div>
   <button class="button" id="back-button">Voltar</button>
 </div>
 
 <script>
+  // Função para obter o parâmetro "id" da URL
   function getIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get("id");
   }
 
-  function carregarDetalhes() {
-    const registros = JSON.parse(localStorage.getItem("registros")) || [];
-    const id = getIdFromUrl();
-    const detailContent = document.getElementById("detail-content");
+  // Função para renderizar uma lista de itens
+  function renderList(field) {
+    if (!field || field.length === 0) return "<em>Nenhum item cadastrado.</em>";
+    return `<ul>${field.map(item => `<li>${item}</li>`).join("")}</ul>`;
+  }
 
-    if (id !== null && registros[id]) {
-      const registro = registros[id];
-      // Utilizando os campos do primeiro exemplo (ajuste conforme sua estrutura de dados)
-      detailContent.innerHTML = `
-        <div class="detail-field">
-          <span class="detail-label">Nome:</span>
-          <span class="detail-value">${registro.nome}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Vida Atual / Máxima:</span>
-          <span class="detail-value">${registro.vidaAtual} / ${registro.vidaMax}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Sanidade Atual / Máxima:</span>
-          <span class="detail-value">${registro.sanidadeAtual} / ${registro.sanidadeMax}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Esforço Atual / Máximo:</span>
-          <span class="detail-value">${registro.esforcoAtual} / ${registro.esforcoMax}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">PM:</span>
-          <span class="detail-value">${registro.pm}</span>
-        </div>
-        <div class="detail-field">
-          <span class="detail-label">Data:</span>
-          <span class="detail-value">${registro.data}</span>
-        </div>
-      `;
-    } else {
-      detailContent.innerHTML = `<p style="color: #ff4655; font-size: 18px;">Registro não encontrado.</p>`;
+  // Função para renderizar as perícias (skills) a partir de um objeto Map (ou objeto simples)
+  function renderSkills(skills) {
+    let html = "<ul>";
+    let count = 0;
+    for (let skill in skills) {
+      if (skills[skill] && skills[skill] !== "Nenhum") {
+        html += `<li>${skill}: ${skills[skill]}</li>`;
+        count++;
+      }
     }
+    html += "</ul>";
+    return count === 0 ? "<em>Nenhuma perícia definida.</em>" : html;
+  }
+
+  // Função para carregar os detalhes do registro via API
+  function carregarDetalhes() {
+    const id = getIdFromUrl();
+    if (!id) {
+      document.getElementById("detail-content").innerHTML = "<p>Registro não encontrado.</p>";
+      return;
+    }
+
+    fetch(`http://localhost:3000/api/registros/${id}`)
+      .then(response => {
+        if (!response.ok) throw new Error("Registro não encontrado");
+        return response.json();
+      })
+      .then(registro => {
+        const detailContent = document.getElementById("detail-content");
+        detailContent.innerHTML = `
+          <div class="detail-field">
+            <span class="detail-label">Nome:</span>
+            <span class="detail-value">${registro.nome}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Vida Máxima:</span>
+            <span class="detail-value">${registro.vidaMax}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Sanidade Máxima:</span>
+            <span class="detail-value">${registro.sanidadeMax}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Esforço Máximo:</span>
+            <span class="detail-value">${registro.esforcoMax}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Pontos de Missão (PM):</span>
+            <span class="detail-value">${registro.pm}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Dinheiro:</span>
+            <span class="detail-value">${registro.dinheiro}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Classe:</span>
+            <span class="detail-value">${registro.classe}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Trilha:</span>
+            <span class="detail-value">${registro.trilha}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Origem:</span>
+            <span class="detail-value">${registro.origem}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Idade:</span>
+            <span class="detail-value">${registro.idade}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Registro de Missões:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.missoes)
+            ? renderList(registro.missoes)
+            : renderList(registro.missoes ? registro.missoes.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Habilidades e Poderes:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.habilidades)
+            ? renderList(registro.habilidades)
+            : renderList(registro.habilidades ? registro.habilidades.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Rituais:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.rituais)
+            ? renderList(registro.rituais)
+            : renderList(registro.rituais ? registro.rituais.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Comentários Adicionais:</span>
+            <span class="detail-value">${registro.comentarios || "<em>Nenhum comentário cadastrado.</em>"}</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Condecorações:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.condecoracoes)
+            ? renderList(registro.condecoracoes)
+            : renderList(registro.condecoracoes ? registro.condecoracoes.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Lojinha:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.lojinha)
+            ? renderList(registro.lojinha)
+            : renderList(registro.lojinha ? registro.lojinha.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Itens Especiais:</span>
+            <span class="detail-value">${
+          Array.isArray(registro.itensEspeciais)
+            ? renderList(registro.itensEspeciais)
+            : renderList(registro.itensEspeciais ? registro.itensEspeciais.split(",").map(item => item.trim()).filter(item => item) : [])
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Perícias:</span>
+            <span class="detail-value">${
+          registro.skills ? renderSkills(registro.skills) : "<em>Nenhuma perícia cadastrada.</em>"
+        }</span>
+          </div>
+          <div class="detail-field">
+            <span class="detail-label">Data (Última modificação):</span>
+            <span class="detail-value">${new Date(registro.data).toLocaleString()}</span>
+          </div>
+        `;
+      })
+      .catch(error => {
+        console.error("Erro ao carregar registro:", error);
+        document.getElementById("detail-content").innerHTML = "<p>Erro ao carregar registro.</p>";
+      });
+  }
+
+  function generatePDF() {
+    const element = document.querySelector(".detail-container");
+    const opt = {
+      margin: 0.5,
+      filename: 'Detalhes_do_Registro.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
   }
 
   document.addEventListener("DOMContentLoaded", () => {
     carregarDetalhes();
-
     const editButton = document.getElementById("edit-button");
     editButton.addEventListener("click", () => {
       const id = getIdFromUrl();
@@ -157,7 +197,6 @@
         alert("Registro não encontrado para edição!");
       }
     });
-
     const backButton = document.getElementById("back-button");
     backButton.addEventListener("click", () => {
       if (document.referrer) {
@@ -166,6 +205,8 @@
         window.location.href = "PrincipalPage.html";
       }
     });
+    const downloadButton = document.getElementById("download-button");
+    downloadButton.addEventListener("click", generatePDF);
   });
 </script>
 </body>

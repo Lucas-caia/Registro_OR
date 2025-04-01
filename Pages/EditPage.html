@@ -3,95 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <title>Editar Registro</title>
+  <link rel="stylesheet" href="/css/edit.css">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #121212;
-      color: #f8f8f8;
-      margin: 0;
-      padding: 20px;
+    .skill-field {
+      margin-bottom: 5px;
     }
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background-color: #1a1a1a;
-      padding: 24px;
-      border-radius: 10px;
-      box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
-    }
-    h2 {
-      text-align: center;
-      color: #ff4655;
-      text-transform: uppercase;
-      letter-spacing: 2px;
+    .skill-field label {
+      display: inline-block;
+      width: 150px;
     }
     .form-field {
-      margin-bottom: 14px;
-      display: flex;
-      flex-direction: column;
+      margin-bottom: 15px;
     }
-    label {
+    .form-field label {
+      display: block;
       font-weight: bold;
-      text-transform: uppercase;
-      font-size: 14px;
-      margin-bottom: 4px;
-      color: #ff4655;
+      margin-bottom: 5px;
     }
-    input {
-      padding: 10px;
-      border: 1px solid #ff4655;
-      border-radius: 6px;
-      background: transparent;
-      color: #f8f8f8;
-      font-size: 16px;
-    }
-    input:focus {
-      outline: none;
-      border-color: #ff7685;
-      box-shadow: 0px 0px 8px rgba(255, 70, 85, 0.6);
-    }
-    #save-button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      cursor: pointer;
-      background-color: #ff4655;
-      color: #fff;
-      border: none;
-      font-weight: bold;
-      text-transform: uppercase;
-      transition: 0.3s;
-    }
-    #save-button:hover {
-      background-color: #ff7685;
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      max-width: 400px;
+      padding: 5px;
     }
   </style>
 </head>
 <body>
 <h2>Editar Registro</h2>
 <div class="container">
+  <!-- Campos principais -->
   <div class="form-field">
     <label for="nome">Nome:</label>
     <input type="text" id="nome" required>
-  </div>
-  <div class="form-field">
-    <label for="vidaAtual">Vida Atual:</label>
-    <input type="number" id="vidaAtual" min="0" required>
   </div>
   <div class="form-field">
     <label for="vidaMax">Vida Máxima:</label>
     <input type="number" id="vidaMax" min="1" required>
   </div>
   <div class="form-field">
-    <label for="sanidadeAtual">Sanidade Atual:</label>
-    <input type="number" id="sanidadeAtual" min="0" required>
-  </div>
-  <div class="form-field">
     <label for="sanidadeMax">Sanidade Máxima:</label>
     <input type="number" id="sanidadeMax" min="1" required>
-  </div>
-  <div class="form-field">
-    <label for="esforcoAtual">Esforço Atual:</label>
-    <input type="number" id="esforcoAtual" min="0" required>
   </div>
   <div class="form-field">
     <label for="esforcoMax">Esforço Máximo:</label>
@@ -102,90 +54,321 @@
     <input type="number" id="pm" min="0" required>
   </div>
   <div class="form-field">
-    <label for="data">Data:</label>
-    <input type="date" id="data" required>
+    <label for="dinheiro">Dinheiro:</label>
+    <input type="number" id="dinheiro" min="0" required>
   </div>
 
-  <button id="save-button">Salvar</button>
+  <!-- Novos campos -->
+  <div class="form-field">
+    <label for="classe">Classe:</label>
+    <select id="classe" required>
+      <option value="">Selecione</option>
+      <option value="Combatente">Combatente</option>
+      <option value="Especialista">Especialista</option>
+      <option value="Ocultista">Ocultista</option>
+    </select>
+  </div>
+  <div class="form-field">
+    <label for="trilha">Trilha:</label>
+    <input type="text" id="trilha" required>
+  </div>
+  <div class="form-field">
+    <label for="origem">Origem:</label>
+    <select id="origem" required>
+      <option value="Acadêmico">Acadêmico</option>
+      <option value="Agente de Saúde">Agente de Saúde</option>
+      <option value="Amnésico">Amnésico</option>
+      <option value="Amigo dos Animais">Amigo dos Animais</option>
+      <option value="Artista">Artista</option>
+      <option value="Astronauta">Astronauta</option>
+      <option value="Atleta">Atleta</option>
+      <option value="Chef">Chef</option>
+      <option value="Chef do Outro Lado">Chef do Outro Lado</option>
+      <option value="Cientista Forense">Cientista Forense</option>
+      <option value="Colegial">Colegial</option>
+      <option value="Cosplayer">Cosplayer</option>
+      <option value="Criminoso">Criminoso</option>
+      <option value="Cultista Arrependido">Cultista Arrependido</option>
+      <option value="Desgarrado">Desgarrado</option>
+      <option value="Dublê">Dublê</option>
+      <option value="Engenheiro">Engenheiro</option>
+      <option value="Escritor">Escritor</option>
+      <option value="Executivo">Executivo</option>
+      <option value="Gaudério Abutre">Gaudério Abutre</option>
+      <option value="Ginasta">Ginasta</option>
+      <option value="Investigador">Investigador</option>
+      <option value="Jornalista">Jornalista</option>
+      <option value="Jovem Místico">Jovem Místico</option>
+      <option value="Legista do Turno da Noite">Legista do Turno da Noite</option>
+      <option value="Lutador">Lutador</option>
+      <option value="Magnata">Magnata</option>
+      <option value="Mateiro">Mateiro</option>
+      <option value="Mercenário">Mercenário</option>
+      <option value="Militar">Militar</option>
+      <option value="Mergulhador">Mergulhador</option>
+      <option value="Motorista">Motorista</option>
+      <option value="Nerd Entusiasta">Nerd Entusiasta</option>
+      <option value="Operário">Operário</option>
+      <option value="Policial">Policial</option>
+      <option value="Professor">Professor</option>
+      <option value="Profetizado">Profetizado</option>
+      <option value="Psicólogo">Psicólogo</option>
+      <option value="Repórter Investigativo">Repórter Investigativo</option>
+      <option value="Religioso">Religioso</option>
+      <option value="Revoltado">Revoltado</option>
+      <option value="Servidor Público">Servidor Público</option>
+      <option value="Teórico da Conspiração">Teórico da Conspiração</option>
+      <option value="T.I.">T.I.</option>
+      <option value="Trabalhador Rural">Trabalhador Rural</option>
+      <option value="Trambiqueiro">Trambiqueiro</option>
+      <option value="Universitário">Universitário</option>
+      <option value="Vítima">Vítima</option>
+    </select>
+  </div>
+  <div class="form-field">
+    <label for="idade">Idade:</label>
+    <input type="number" id="idade" min="0" required>
+  </div>
+  <div class="form-field">
+    <label for="missoes">Registro de Missões:</label>
+    <textarea id="missoes" placeholder="Digite as missões separadas por vírgula"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="habilidades">Habilidades e Poderes:</label>
+    <textarea id="habilidades" placeholder="Digite as habilidades separadas por vírgula"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="rituais">Rituais:</label>
+    <textarea id="rituais" placeholder="Digite os rituais separados por vírgula"></textarea>
+  </div>
+
+  <!-- Novos campos -->
+  <div class="form-field">
+    <label for="comentarios">Comentários Adicionais:</label>
+    <textarea id="comentarios" placeholder="Digite os comentários adicionais"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="condecoracoes">Condecorações:</label>
+    <textarea id="condecoracoes" placeholder="Digite as condecorações separadas por vírgula"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="lojinha">Lojinha:</label>
+    <textarea id="lojinha" placeholder="Digite os itens da lojinha separados por vírgula"></textarea>
+  </div>
+  <div class="form-field">
+    <label for="itensEspeciais">Itens Especiais:</label>
+    <textarea id="itensEspeciais" placeholder="Digite os itens especiais separados por vírgula"></textarea>
+  </div>
+
+  <!-- Seção de perícias (dinamicamente gerada) -->
+  <div class="form-field">
+    <label>Perícias:</label>
+    <div id="skills-container"></div>
+  </div>
+
+  <!-- Botões -->
+  <div class="button-container">
+    <button id="save-button">Salvar</button>
+    <button id="delete-button">Excluir</button>
+  </div>
 </div>
 
 <script>
-  // Obtém o "id" da query string
   function getIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get("id");
   }
 
-  // Carrega os dados do registro e preenche os campos
-  document.addEventListener("DOMContentLoaded", () => {
-    const id = getIdFromUrl();
-    let registros = JSON.parse(localStorage.getItem("registros")) || [];
+  const skills = [
+    "Acrobacia", "Atletismo", "Investigação", "Adestramento", "Artes", "Ciências", "Crime",
+    "Diplomacia", "Enganação", "Fortitude", "Furtividade", "Iniciativa", "Intimidação", "Intuição",
+    "Luta", "Medicina", "Ocultismo", "Percepção", "Pilotagem", "Pontaria", "Profissão", "Reflexos",
+    "Religião", "Sobrevivencia", "Tatica", "Tecnologia", "Vontade"
+  ];
 
-    if (id === null || !registros[id]) {
+  const levels = ["Nenhum", "Treinado", "Veterano", "Expert"];
+
+  function generateSkillInputs() {
+    const container = document.getElementById("skills-container");
+    container.innerHTML = "";
+    skills.forEach(skill => {
+      const div = document.createElement("div");
+      div.className = "skill-field";
+      const label = document.createElement("label");
+      label.textContent = skill + ": ";
+      const select = document.createElement("select");
+      select.name = "skill_" + skill;
+      levels.forEach(level => {
+        const option = document.createElement("option");
+        option.value = level;
+        option.textContent = level;
+        select.appendChild(option);
+      });
+      div.appendChild(label);
+      div.appendChild(select);
+      container.appendChild(div);
+    });
+  }
+
+  function loadRecord() {
+    const id = getIdFromUrl();
+    if (!id) {
       alert("Registro não encontrado!");
       window.close();
       return;
     }
+    fetch(`http://localhost:3000/api/registros/${id}`)
+      .then(response => {
+        if (!response.ok) throw new Error("Registro não encontrado");
+        return response.json();
+      })
+      .then(registro => {
+        document.getElementById("nome").value = registro.nome;
+        document.getElementById("vidaMax").value = registro.vidaMax;
+        document.getElementById("sanidadeMax").value = registro.sanidadeMax;
+        document.getElementById("esforcoMax").value = registro.esforcoMax;
+        document.getElementById("pm").value = registro.pm;
+        document.getElementById("dinheiro").value = registro.dinheiro;
+        document.getElementById("classe").value = registro.classe || "";
+        document.getElementById("trilha").value = registro.trilha || "";
+        document.getElementById("origem").value = registro.origem || "";
+        document.getElementById("idade").value = registro.idade || "";
+        document.getElementById("missoes").value = registro.missoes ? registro.missoes.join(", ") : "";
+        document.getElementById("habilidades").value = registro.habilidades ? registro.habilidades.join(", ") : "";
+        document.getElementById("rituais").value = registro.rituais ? registro.rituais.join(", ") : "";
+        document.getElementById("comentarios").value = registro.comentarios || "";
+        document.getElementById("condecoracoes").value = registro.condecoracoes ? registro.condecoracoes.join(", ") : "";
+        document.getElementById("lojinha").value = registro.lojinha ? registro.lojinha.join(", ") : "";
+        document.getElementById("itensEspeciais").value = registro.itensEspeciais || "";
 
-    const registro = registros[id];
-    document.getElementById("nome").value = registro.nome;
-    document.getElementById("vidaAtual").value = registro.vidaAtual;
-    document.getElementById("vidaMax").value = registro.vidaMax;
-    document.getElementById("sanidadeAtual").value = registro.sanidadeAtual;
-    document.getElementById("sanidadeMax").value = registro.sanidadeMax;
-    document.getElementById("esforcoAtual").value = registro.esforcoAtual;
-    document.getElementById("esforcoMax").value = registro.esforcoMax;
-    document.getElementById("pm").value = registro.pm;
-    document.getElementById("data").value = registro.data;
+        if (registro.skills) {
+          skills.forEach(skill => {
+            const select = document.querySelector(`select[name="skill_${skill}"]`);
+            if (select && registro.skills[skill]) {
+              select.value = registro.skills[skill];
+            }
+          });
+        }
+      })
+      .catch(error => {
+        console.error("Erro ao carregar registro:", error);
+        alert("Erro ao carregar registro.");
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    generateSkillInputs();
+    loadRecord();
   });
 
-  // Ao clicar no botão salvar, atualiza o registro no localStorage
+  // Evento para salvar os dados (atualização via PUT)
   document.getElementById("save-button").addEventListener("click", () => {
     const id = getIdFromUrl();
-    let registros = JSON.parse(localStorage.getItem("registros")) || [];
-
-    if (id === null || !registros[id]) {
+    if (!id) {
       alert("Registro não encontrado!");
       return;
     }
-
-    // Coleta os valores dos campos
+    const dataAtual = new Date().toISOString();
     const nome = document.getElementById("nome").value.trim();
-    const vidaAtual = parseInt(document.getElementById("vidaAtual").value) || 0;
     const vidaMax = parseInt(document.getElementById("vidaMax").value) || 1;
-    const sanidadeAtual = parseInt(document.getElementById("sanidadeAtual").value) || 0;
     const sanidadeMax = parseInt(document.getElementById("sanidadeMax").value) || 1;
-    const esforcoAtual = parseInt(document.getElementById("esforcoAtual").value) || 0;
     const esforcoMax = parseInt(document.getElementById("esforcoMax").value) || 1;
     const pm = parseInt(document.getElementById("pm").value) || 0;
-    const data = document.getElementById("data").value;
+    const dinheiro = parseInt(document.getElementById("dinheiro").value) || 0;
+    const classe = document.getElementById("classe").value;
+    const trilha = document.getElementById("trilha").value.trim();
+    const origem = document.getElementById("origem").value;
+    const idade = parseInt(document.getElementById("idade").value) || 0;
+    const missoes = document.getElementById("missoes").value.split(",").map(item => item.trim()).filter(item => item);
+    const habilidades = document.getElementById("habilidades").value.split(",").map(item => item.trim()).filter(item => item);
+    const rituais = document.getElementById("rituais").value.split(",").map(item => item.trim()).filter(item => item);
+    const comentarios = document.getElementById("comentarios").value.trim();
+    const condecoracoes = document.getElementById("condecoracoes").value.split(",").map(item => item.trim()).filter(item => item);
+    const lojinha = document.getElementById("lojinha").value.split(",").map(item => item.trim()).filter(item => item);
+    const itensEspeciais = document.getElementById("itensEspeciais").value.trim();
 
-    if (!nome || !data) {
-      alert("Por favor, preencha todos os campos!");
+    if (!nome || !classe || !origem) {
+      alert("Por favor, preencha todos os campos obrigatórios!");
       return;
     }
 
-    // Atualiza o registro
-    registros[id] = {
+    let recordSkills = {};
+    skills.forEach(skill => {
+      const select = document.querySelector(`select[name="skill_${skill}"]`);
+      if (select) {
+        recordSkills[skill] = select.value;
+      }
+    });
+
+    const registroAtualizado = {
       nome,
-      vidaAtual,
       vidaMax,
-      sanidadeAtual,
       sanidadeMax,
-      esforcoAtual,
       esforcoMax,
       pm,
-      data
+      dinheiro,
+      classe,
+      trilha,
+      origem,
+      idade,
+      missoes,
+      habilidades,
+      rituais,
+      comentarios,
+      condecoracoes,
+      lojinha,
+      itensEspeciais,
+      skills: recordSkills,
+      data: dataAtual
     };
 
-    localStorage.setItem("registros", JSON.stringify(registros));
+    fetch(`http://localhost:3000/api/registros/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(registroAtualizado)
+    })
+      .then(response => {
+        if (!response.ok) throw new Error("Erro ao atualizar registro.");
+        return response.json();
+      })
+      .then(data => {
+        alert("Registro atualizado com sucesso!");
+        if (window.opener) {
+          window.opener.location.reload();
+        }
+        window.close();
+      })
+      .catch(error => {
+        console.error("Erro:", error);
+        alert("Falha ao atualizar registro.");
+      });
+  });
 
-    // Se a PrincipalPage estiver aberta, recarrega a lista (ou você pode chamar uma função específica)
-    if (window.opener && !window.opener.closed) {
-      window.opener.location.reload();
+  document.getElementById("delete-button").addEventListener("click", () => {
+    if (!confirm("Tem certeza que deseja excluir este registro?")) {
+      return;
     }
-
-    window.close();
+    const id = getIdFromUrl();
+    if (!id) {
+      alert("Registro não encontrado!");
+      return;
+    }
+    fetch(`http://localhost:3000/api/registros/${id}`, {
+      method: 'DELETE'
+    })
+      .then(response => {
+        if (response.status === 204) {
+          alert("Registro excluído com sucesso!");
+          if (window.opener) window.opener.location.reload();
+          window.close();
+        } else {
+          throw new Error("Erro ao excluir registro.");
+        }
+      })
+      .catch(error => {
+        console.error("Erro:", error);
+        alert("Falha ao excluir registro.");
+      });
   });
 </script>
 </body>
