@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors'); // Adicione essa linha
 const mongoose = require('mongoose');
-const Registro = require('./list'); // Ajuste o caminho se necessário
+const Registro = require('./list');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,7 +19,13 @@ mongoose.connect('mongodb://127.0.0.1:27017/Registro_OR', {
   .then(() => console.log('Conectado ao MongoDB'))
   .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
 
-// Rotas da API
+app.use(express.static('css'));
+app.use(express.static('Pages'));
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/Pages/PrincipalPage.html');
+});
+
 app.get('/api/registros', async (req, res) => {
   try {
     const registros = await Registro.find();
@@ -67,6 +73,6 @@ app.delete('/api/registros/:id', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
