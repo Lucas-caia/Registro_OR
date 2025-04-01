@@ -6,13 +6,12 @@ const Registro = require('./list');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Habilita o CORS
 app.use(cors());
-
 app.use(express.json());
 
-// Conectar ao MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/Registro_OR', {
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/Registro_OR';
+
+mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
