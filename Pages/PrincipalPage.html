@@ -4,11 +4,43 @@
   <meta charset="UTF-8">
   <title>Página Principal</title>
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Botões de exportação e importação no canto superior direito */
+    #action-container {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+    }
+    #export-button, #import-button {
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+    /* Container para exibir o JSON exportado */
+    #export-display {
+      margin: 20px auto;
+      max-width: 800px;
+      white-space: pre-wrap;
+      background: #f4f4f4;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+  </style>
 </head>
 <body>
 <header>
   <h1>Registros</h1>
 </header>
+
+<!-- Container para botões de ações -->
+<div id="action-container">
+  <button id="export-button">Exportar Dados</button>
+  <button id="import-button">Importar Dados</button>
+  <!-- Input oculto para importar o arquivo -->
+  <input type="file" id="import-file" accept=".json" style="display:none;">
+</div>
 
 <div id="search-container">
   <input type="text" id="search-input" placeholder="Pesquisar por nome...">
@@ -16,6 +48,8 @@
 
 <main id="registros-container"></main>
 <button id="add-button">+</button>
+
+
 
 <script>
   let registros = [];
@@ -77,8 +111,6 @@
       star.addEventListener("click", (event) => {
         event.stopPropagation();
         const novoFavorito = !registro.favorito;
-
-        // Envie uma requisição PUT para atualizar somente o campo favorito
         fetch(`http://localhost:3000/api/registros/${registro._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -89,7 +121,6 @@
             return response.json();
           })
           .then(updatedRegistro => {
-            // Atualize o objeto local com o valor retornado da API
             registro.favorito = updatedRegistro.favorito;
             renderizarRegistros();
           })
@@ -100,6 +131,47 @@
       });
       container.appendChild(div);
     });
+  }
+
+  function exportData() {
+    fetch('http://localhost:3000/api/export')
+      .then(response => response.json())
+      .then(result => {
+        alert("Exportação realizada com sucesso!\nArquivo atualizado: " + result.filename);
+      })
+      .catch(error => {
+        console.error("Erro ao exportar registros:", error);
+        alert("Falha ao exportar registros.");
+      });
+  }
+
+  function importData(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        fetch('http://localhost:3000/api/registros/import', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        })
+          .then(response => {
+            if (!response.ok) throw new Error("Erro ao importar registros.");
+            return response.json();
+          })
+          .then(result => {
+            alert("Importação realizada com sucesso!");
+            loadRecordsFromAPI();
+          })
+          .catch(error => {
+            console.error("Erro na importação:", error);
+            alert("Falha ao importar registros.");
+          });
+      } catch (err) {
+        alert("Erro ao ler o arquivo. Verifique se o arquivo é um JSON válido.");
+      }
+    };
+    reader.readAsText(file);
   }
 
   const searchInput = document.getElementById("search-input");
@@ -115,6 +187,15 @@
     const addButton = document.getElementById("add-button");
     addButton.addEventListener("click", () => {
       window.open("RegisterPage.html", "Cadastro", "width=600,height=600");
+    });
+    document.getElementById("export-button").addEventListener("click", exportData);
+    document.getElementById("import-button").addEventListener("click", () => {
+      document.getElementById("import-file").click();
+    });
+    document.getElementById("import-file").addEventListener("change", function () {
+      if (this.files && this.files.length > 0) {
+        importData(this.files[0]);
+      }
     });
     loadRecordsFromAPI();
   });

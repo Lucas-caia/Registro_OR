@@ -6,12 +6,10 @@ const Registro = require('./list');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Habilita o CORS
 app.use(cors());
 
 app.use(express.json());
 
-// Conectar ao MongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/Registro_OR', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -72,6 +70,35 @@ app.delete('/api/registros/:id', async (req, res) => {
     res.status(400).send(err);
   }
 });
+
+app.post('/api/registros/import', async (req, res) => {
+  try {
+    await Registro.deleteMany({});
+    const novos = await Registro.insertMany(req.body);
+    res.status(201).json(novos);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+const fs = require('fs');
+const path = require('path');
+
+
+app.get('/api/export', async (req, res) => {
+  try {
+    const registros = await Registro.find();
+    const jsonContent = JSON.stringify(registros, null, 2);
+    const filename = `registros.json`;
+    const outputPath = path.join(__dirname, 'js', filename);
+    fs.writeFileSync(outputPath, jsonContent, 'utf8');
+    res.json({ message: 'Exportação realizada com sucesso!', filename });
+  } catch (error) {
+    console.error("Erro na exportação:", error);
+    res.status(500).json({ message: 'Falha ao exportar registros.', error });
+  }
+});
+
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor rodando na porta ${PORT}`);
