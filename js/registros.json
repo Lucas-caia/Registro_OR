@@ -1,56 +1,68 @@
 [
   {
-    "_id": "67eafe87c59eae14bc7406b0",
-    "nome": "Receba da silva",
-    "vidaMax": 12,
-    "sanidadeMax": 32,
-    "esforcoMax": 12,
-    "pm": 32,
-    "dinheiro": 12,
+    "_id": "67ef14448ee9e7e76cc94f73",
+    "nome": "Pierre Junior",
+    "vidaMax": 80,
+    "sanidadeMax": 35,
+    "esforcoMax": 21,
+    "pm": 27,
+    "dinheiro": 1477,
     "classe": "Combatente",
-    "trilha": "Galador",
-    "origem": "Escritor",
-    "idade": 14,
-    "missoes": [],
-    "habilidades": [],
-    "rituais": [],
-    "comentarios": "",
-    "condecoracoes": [],
-    "lojinha": [],
+    "trilha": "Guerreiro",
+    "origem": "Ginasta",
+    "idade": 22,
+    "missoes": [
+      "- A Última Safra\n- A Cidade Abandonada\n- Tripofobia\n- Radiação da Esperança \n- Projeto Kalisto\n- Copycat\n- A Bela Furiosa\n- Trilha de um Anjo\n- Espada do Outro Lado\n- Evento do João\n- O Véu do Oculto"
+    ],
+    "habilidades": [
+      "- Sangue de Ferro\n- Golpe Pesado\n- mobilidade acrobatica"
+    ],
+    "rituais": [
+      "Fortalecimento Sensorial"
+    ],
+    "condecoracoes": [
+      "Condecoração usuário = +5 sanidade máxima",
+      "Condecoração Personagem = +5 em pericia(Fortitude)"
+    ],
+    "lojinha": [
+      "- Cursinho do cris (x3)",
+      "- Proficional especialista"
+    ],
     "itensEspeciais": [
       ""
     ],
+    "data": "2025-04-04T11:43:22.753Z",
+    "favorito": true,
+    "__v": 0,
+    "comentarios": "4 FOR, 2 AGI INT, 1 PRE VIG",
     "skills": {
       "Acrobacia": "Treinado",
-      "Atletismo": "Nenhum",
-      "Investigação": "Nenhum",
+      "Atletismo": "Treinado",
+      "Investigação": "Treinado",
       "Adestramento": "Nenhum",
       "Artes": "Nenhum",
       "Ciências": "Nenhum",
       "Crime": "Nenhum",
       "Diplomacia": "Nenhum",
       "Enganação": "Nenhum",
-      "Fortitude": "Nenhum",
+      "Fortitude": "Veterano",
       "Furtividade": "Nenhum",
       "Iniciativa": "Nenhum",
       "Intimidação": "Nenhum",
       "Intuição": "Nenhum",
-      "Luta": "Nenhum",
-      "Medicina": "Nenhum",
-      "Ocultismo": "Veterano",
-      "Percepção": "Treinado",
+      "Luta": "Veterano",
+      "Medicina": "Treinado",
+      "Ocultismo": "Treinado",
+      "Percepção": "Nenhum",
       "Pilotagem": "Nenhum",
       "Pontaria": "Treinado",
       "Profissão": "Treinado",
-      "Reflexos": "Nenhum",
-      "Religião": "Veterano",
+      "Reflexos": "Veterano",
+      "Religião": "Nenhum",
       "Sobrevivencia": "Nenhum",
-      "Tatica": "Expert",
-      "Tecnologia": "Veterano",
-      "Vontade": "Treinado"
-    },
-    "data": "2025-03-31T23:48:20.397Z",
-    "favorito": true,
-    "__v": 0
+      "Tatica": "Nenhum",
+      "Tecnologia": "Nenhum",
+      "Vontade": "Veterano"
+    }
   }
 ]
