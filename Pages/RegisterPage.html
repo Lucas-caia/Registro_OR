@@ -26,7 +26,6 @@
 <header>Adicionar Registro</header>
 <div class="register-container">
   <div class="register-title">Novo Personagem</div>
-
   <!-- Campos principais -->
   <div class="form-field">
     <label for="nome">Nome:</label>
@@ -52,7 +51,6 @@
     <label for="dinheiro">Dinheiro:</label>
     <input type="number" id="dinheiro" class="register-input" min="0" required>
   </div>
-
   <!-- Novos campos -->
   <div class="form-field">
     <label for="classe">Classe:</label>
@@ -140,7 +138,6 @@
   </div>
   <button id="save-button" class="register-button">Salvar</button>
 </div>
-
 <script>
   document.getElementById("save-button").addEventListener("click", () => {
     // Coleta os valores dos campos
@@ -183,9 +180,16 @@
     // Envia a requisição POST para a API
     fetch('http://localhost:3000/api/registros', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(novoRegistro)
+      headers: {
+      'Content-Type': 'application/json'
+      },
+    body: JSON.stringify({
+      idade: idadeInput.value,
+      missoes: missoesInput.value,
+      poderes: poderesInput.value,
+      rituais: rituaisInput.value
     })
+  })
       .then(response => {
         if (!response.ok) {
           throw new Error("Erro ao salvar registro.");
@@ -195,7 +199,7 @@
       .then(data => {
         alert("Registro salvo com sucesso!");
         // Opcional: atualize a PrincipalPage se ela estiver aberta
-        if (window.opener) {
+        if (window.opener){
           window.opener.location.reload();
         }
         window.close();

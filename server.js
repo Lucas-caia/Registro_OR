@@ -2,15 +2,16 @@ const express = require('express');
 const cors = require('cors'); // Adicione essa linha
 const mongoose = require('mongoose');
 const Registro = require('./list');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-
 app.use(express.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017/Registro_OR', {
+mongoose.connect('mongodb://192.168.0.1:27017/Registro_OR', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -81,10 +82,6 @@ app.post('/api/registros/import', async (req, res) => {
   }
 });
 
-const fs = require('fs');
-const path = require('path');
-
-
 app.get('/api/export', async (req, res) => {
   try {
     const registros = await Registro.find();
@@ -99,6 +96,11 @@ app.get('/api/export', async (req, res) => {
   }
 });
 
+// Rota para páginas não encontradas (Erro 404)
+// Essa rota é executada após todas as demais, capturando as requisições não tratadas.
+app.use((req, res) => {
+  res.status(404).sendFile(__dirname + '/Pages/404.html');
+});
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor rodando na porta ${PORT}`);

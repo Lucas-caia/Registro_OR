@@ -9,7 +9,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   min-height: 100vh;
 }
 
@@ -67,61 +66,105 @@ header {
   box-shadow: 0px 0px 20px rgba(201, 179, 126, 0.6);
 }
 
-/* Cabeçalho e Corpo do Registro */
 .registro-header {
   display: flex;
   justify-content: space-between;
-  font-size: 1.2em;
+  align-items: center;
   margin-bottom: 10px;
+}
+
+.registro-star {
+  color: #555;
+  font-size: 20px;
+  transition: color 0.3s ease;
+}
+
+.registro-star.favorito {
+  color: #ffd700;
+}
+
+.registro-gear {
+  font-size: 18px;
+  color: #c9b37e;
+  transition: color 0.3s ease;
+}
+
+.registro-gear:hover {
+  color: #fff;
 }
 
 .registro-body {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .registro-chip {
-  background-color: #2a2a2a;
+  background-color: #2c2c2c;
   border: 1px solid #c9b37e;
-  border-radius: 15px;
   padding: 5px 10px;
-  font-size: 1em;
+  border-radius: 20px;
+  font-size: 0.95em;
   color: #c9b37e;
-  white-space: nowrap;
+  text-align: center;
 }
 
-/* Botão de Adicionar */
+/* Botão de adicionar registro */
 #add-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: #a10f2b;
+  background-color: #c9b37e;
   color: #0a0a0a;
-  font-size: 30px;
-  border: 2px solid #c9b37e;
+  border: none;
+  font-size: 32px;
+  padding: 10px 18px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(201, 179, 126, 0.5);
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 #add-button:hover {
+  background-color: #e5d4a3;
   transform: scale(1.1);
-  box-shadow: 0px 0px 15px rgba(161, 15, 43, 0.9);
-  background-color: #c91639;
 }
 
-/* Estilo para Estrela Favoritada */
-.registro-star.favorito {
-  color: #ffeb3b;
-  animation: glow 1s infinite alternate;
+/* Container de ações (exportar/importar) */
+#action-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
 }
 
-@keyframes glow {
-  from { text-shadow: 0 0 5px #ffeb3b; }
-  to { text-shadow: 0 0 20px #ffeb3b; }
+#export-button, #import-button {
+  background-color: #2c2c2c;
+  color: #c9b37e;
+  border: 1px solid #c9b37e;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+#export-button:hover,
+#import-button:hover {
+  background-color: #3a3a3a;
+}
+
+/* Exibição de JSON exportado */
+#export-display {
+  margin: 20px auto;
+  max-width: 800px;
+  white-space: pre-wrap;
+  background: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #ccc;
+  color: #000;
+  border-radius: 5px;
 }
 
 /* ============================================= */
@@ -224,41 +267,56 @@ header {
   border: 2px solid #c9b37e;
   border-radius: 10px;
   padding: 20px;
-  width: 350px;
+  width: 100%;
+  max-width: 350px;
+  margin: 30px auto;
   box-shadow: 0px 0px 15px rgba(201, 179, 126, 0.3);
   text-align: center;
 }
 
+/* Título da página de registro */
 .register-title {
   font-size: 1.8em;
   font-weight: bold;
   color: #f4c430;
   text-shadow: 2px 2px 10px rgba(201, 179, 126, 0.6);
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
+/* Estilização dos campos do formulário */
 .form-field {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  width: 100%;
 }
 
-label {
-  font-size: 1.2em;
+.form-field label {
+  width: 100%;
+  font-size: 1.1em;
   margin-bottom: 5px;
 }
 
+/* Estilo dos inputs, selects e textareas */
 .register-input {
-  width: 90%;
+  width: 100%;
   padding: 10px;
   border: 1px solid #c9b37e;
   background-color: #1c1c1c;
   color: #c9b37e;
   border-radius: 5px;
   font-size: 1em;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.register-input:focus {
+  border-color: #f4c430;
+  box-shadow: 0 0 10px rgba(244, 196, 48, 0.5);
+  outline: none;
+}
+
+/* Botão de salvar */
 .register-button {
   width: 100%;
   padding: 12px;
@@ -270,9 +328,24 @@ label {
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-top: 10px;
 }
 
 .register-button:hover {
   background-color: #e0c987;
   transform: scale(1.05);
+}
+
+/* Ajustes para dispositivos móveis */
+@media (max-width: 480px) {
+  .register-container {
+    width: 90%;
+    padding: 15px;
+  }
+  .register-title {
+    font-size: 1.5em;
+  }
+  .register-button {
+    font-size: 1em;
+  }
 }

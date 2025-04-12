@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap');
 
-body {
+body{
   font-family: 'IM Fell English', serif;
   background: #0a0a0a url('path_to_texture.jpg') no-repeat center center fixed;
   background-size: cover;
@@ -17,12 +17,12 @@ body {
   animation: fadeIn 1.5s ease-in-out;
 }
 
-@keyframes fadeIn {
+@keyframes fadeIn{
   from { opacity: 0; transform: scale(0.98); }
   to { opacity: 1; transform: scale(1); }
 }
 
-h1 {
+h1{
   font-size: 4em;
   color: #a10f2b;
   text-shadow: 3px 3px 15px rgba(161, 15, 43, 0.6);
@@ -31,13 +31,13 @@ h1 {
   animation: glitch 1.5s infinite;
 }
 
-@keyframes glitch {
+@keyframes glitch{
   0% { text-shadow: 3px 3px 15px rgba(161, 15, 43, 0.6); }
   50% { text-shadow: -3px -3px 15px rgba(161, 15, 43, 0.8); }
   100% { text-shadow: 3px 3px 15px rgba(161, 15, 43, 0.6); }
 }
 
-p {
+p{
   font-size: 1.5em;
   max-width: 500px;
   text-shadow: 0px 0px 15px rgba(201, 179, 126, 0.3);
@@ -45,12 +45,12 @@ p {
   animation: fadeInText 2s ease-in forwards 1s;
 }
 
-@keyframes fadeInText {
+@keyframes fadeInText{
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.button {
+.button{
   margin-top: 20px;
   background-color: transparent;
   color: #c9b37e;
@@ -66,13 +66,13 @@ p {
   animation: pulse 1.5s infinite;
 }
 
-@keyframes pulse {
+@keyframes pulse{
   0% { box-shadow: 0px 0px 15px rgba(161, 15, 43, 0.5); }
   50% { box-shadow: 0px 0px 25px rgba(161, 15, 43, 0.8); }
   100% { box-shadow: 0px 0px 15px rgba(161, 15, 43, 0.5); }
 }
 
-.button:hover {
+.button:hover{
   background-color: #a10f2b;
   color: #0a0a0a;
   transform: scale(1.1);

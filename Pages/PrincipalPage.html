@@ -33,7 +33,6 @@
 <header>
   <h1>Registros</h1>
 </header>
-
 <!-- Container para botões de ações -->
 <div id="action-container">
   <button id="export-button">Exportar Dados</button>
@@ -41,163 +40,84 @@
   <!-- Input oculto para importar o arquivo -->
   <input type="file" id="import-file" accept=".json" style="display:none;">
 </div>
-
 <div id="search-container">
   <input type="text" id="search-input" placeholder="Pesquisar por nome...">
 </div>
-
 <main id="registros-container"></main>
 <button id="add-button">+</button>
-
-
-
 <script>
-  let registros = [];
+  const saveButton = document.getElementById("save-button");
 
-  function loadRecordsFromAPI() {
-    fetch('http://localhost:3000/api/registros')
-      .then(response => response.json())
-      .then(data => {
-        registros = data;
-        renderizarRegistros();
-      })
-      .catch(error => console.error('Erro ao carregar registros:', error));
-  }
+  saveButton.addEventListener("click", () => {
+    // Desabilita o botão para evitar cliques múltiplos enquanto a requisição está sendo processada.
+    saveButton.disabled = true;
 
-  function renderizarRegistros(registrosFiltrados = null) {
-    const container = document.getElementById("registros-container");
-    container.innerHTML = "";
-    let lista = registrosFiltrados || registros;
-    lista = lista.slice().sort((a, b) => (b.favorito ? 1 : 0) - (a.favorito ? 1 : 0));
+    // Coleta os valores dos campos e define valores padrão quando necessário
+    const nome = document.getElementById("nome").value.trim();
+    const vidaMax = parseInt(document.getElementById("vidaMax").value) || 1;
+    const sanidadeMax = parseInt(document.getElementById("sanidadeMax").value) || 1;
+    const esforcoMax = parseInt(document.getElementById("esforcoMax").value) || 1;
+    const pm = parseInt(document.getElementById("pm").value) || 0;
+    const dinheiro = parseInt(document.getElementById("dinheiro").value) || 0;
+    const classe = document.getElementById("classe").value;
+    const trilha = document.getElementById("trilha").value.trim();
+    const origem = document.getElementById("origem").value;
+    const idade = parseInt(document.getElementById("idade").value) || 0;
+    const missoes = document.getElementById("missoes").value.split(",").map(item => item.trim()).filter(item => item);
+    const habilidades = document.getElementById("habilidades").value.split(",").map(item => item.trim()).filter(item => item);
+    const rituais = document.getElementById("rituais").value.split(",").map(item => item.trim()).filter(item => item);
 
-    if (lista.length === 0) {
-      container.innerHTML = "<p style='text-align: center; color: #bbb;'>Nenhum registro encontrado.</p>";
+    // Verifica se os campos obrigatórios foram preenchidos
+    if (!nome || !classe || !trilha || !origem) {
+      alert("Por favor, preencha todos os campos obrigatórios!");
+      saveButton.disabled = false;
       return;
     }
 
-    lista.forEach((registro) => {
-      const div = document.createElement("div");
-      div.classList.add("registro");
+    // Monta o objeto do novo registro
+    const novoRegistro = {
+      nome,
+      vidaMax,
+      sanidadeMax,
+      esforcoMax,
+      pm,
+      dinheiro,
+      classe,
+      trilha,
+      origem,
+      idade,
+      missoes,
+      habilidades,
+      rituais,
+      data: new Date().toISOString()  // Armazena a data/hora da criação
+    };
 
-      const starClass = registro.favorito ? "registro-star favorito" : "registro-star";
-
-      div.innerHTML = `
-          <div class="registro-header">
-            <span class="${starClass}">&#9733;</span>
-            <span class="registro-gear">&#9881;</span>
-          </div>
-          <div class="registro-body">
-            <div class="registro-chip">Nome: ${registro.nome}</div>
-            <div class="registro-chip">Vida: ${registro.vidaMax}</div>
-            <div class="registro-chip">Sanidade: ${registro.sanidadeMax}</div>
-            <div class="registro-chip">Esforço: ${registro.esforcoMax}</div>
-            <div class="registro-chip">Dinheiro: ${registro.dinheiro || '---'}</div>
-            <div class="registro-chip">PM: ${registro.pm}</div>
-            <div class="registro-chip">Data: ${new Date(registro.data).toLocaleString()}</div>
-          </div>
-        `;
-
-      div.addEventListener("click", () => {
-        window.location.href = `DetailPage.html?id=${registro._id}`;
-      });
-
-      const gear = div.querySelector(".registro-gear");
-      gear.addEventListener("click", (event) => {
-        event.stopPropagation();
-        window.open(`EditPage.html?id=${registro._id}`, "Editar Registro", "width=600,height=600");
-      });
-
-      const star = div.querySelector(".registro-star");
-      star.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const novoFavorito = !registro.favorito;
-        fetch(`http://localhost:3000/api/registros/${registro._id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ favorito: novoFavorito })
-        })
-          .then(response => {
-            if (!response.ok) throw new Error("Erro ao atualizar favorito.");
-            return response.json();
-          })
-          .then(updatedRegistro => {
-            registro.favorito = updatedRegistro.favorito;
-            renderizarRegistros();
-          })
-          .catch(error => {
-            console.error("Erro ao atualizar favorito:", error);
-            alert("Falha ao atualizar favorito.");
-          });
-      });
-      container.appendChild(div);
-    });
-  }
-
-  function exportData() {
-    fetch('http://localhost:3000/api/export')
-      .then(response => response.json())
-      .then(result => {
-        alert("Exportação realizada com sucesso!\nArquivo atualizado: " + result.filename);
+    // Envia a requisição POST para criar o registro
+    fetch('http://localhost:3000/api/registros', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(novoRegistro)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Erro ao salvar registro.");
+        }
+        return response.json();
+      })
+      .then(data => {
+        alert("Registro salvo com sucesso!");
+        // Atualiza a página Principal, se ela estiver aberta, e fecha a janela atual
+        if (window.opener) {
+          window.opener.location.reload();
+        }
+        window.close();
       })
       .catch(error => {
-        console.error("Erro ao exportar registros:", error);
-        alert("Falha ao exportar registros.");
+        console.error("Erro:", error);
+        alert("Falha ao salvar registro.");
+        // Reabilita o botão caso ocorra erro
+        saveButton.disabled = false;
       });
-  }
-
-  function importData(file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        const data = JSON.parse(e.target.result);
-        fetch('http://localhost:3000/api/registros/import', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        })
-          .then(response => {
-            if (!response.ok) throw new Error("Erro ao importar registros.");
-            return response.json();
-          })
-          .then(result => {
-            alert("Importação realizada com sucesso!");
-            loadRecordsFromAPI();
-          })
-          .catch(error => {
-            console.error("Erro na importação:", error);
-            alert("Falha ao importar registros.");
-          });
-      } catch (err) {
-        alert("Erro ao ler o arquivo. Verifique se o arquivo é um JSON válido.");
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  const searchInput = document.getElementById("search-input");
-  searchInput.addEventListener("input", function () {
-    const filtro = this.value.toLowerCase();
-    const registrosFiltrados = registros.filter(registro =>
-      registro.nome.toLowerCase().includes(filtro)
-    );
-    renderizarRegistros(registrosFiltrados);
-  });
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const addButton = document.getElementById("add-button");
-    addButton.addEventListener("click", () => {
-      window.open("RegisterPage.html", "Cadastro", "width=600,height=600");
-    });
-    document.getElementById("export-button").addEventListener("click", exportData);
-    document.getElementById("import-button").addEventListener("click", () => {
-      document.getElementById("import-file").click();
-    });
-    document.getElementById("import-file").addEventListener("change", function () {
-      if (this.files && this.files.length > 0) {
-        importData(this.files[0]);
-      }
-    });
-    loadRecordsFromAPI();
   });
 </script>
 </body>
